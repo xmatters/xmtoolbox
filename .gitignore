@@ -1,0 +1,7 @@
+/data/
+/node_modules/
+/examples/
+app.js
+.vscode
+.VSCodeCounter
+.env
