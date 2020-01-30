@@ -14,8 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "bottleneck": "^2.19.5",
-    "console-stamp": "^0.2.9",
-    "csvtojson": "^2.0.10",
     "lodash": "^4.17.15",
     "loglevel": "^1.6.4",
     "request": "^2.88.0",
