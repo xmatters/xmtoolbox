@@ -100,7 +100,7 @@ async function GetPerson(env, id) {
   - getManyInPlan()
   - getResponseOptions()
   - getFormSections()
-- groupRoster
+- groupMembers
   - getMany()
   - create()
   - delete()
