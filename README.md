@@ -231,3 +231,19 @@ async function GetPerson(env, id) {
 - Syncing any communication plan related data such as the plans, forms, scenarios, plan properties, plan constants, plan endpoints, shared libraries, or integrations require that the rest user have edit access for the communication plan(s). One way to accomplish this is to add the Rest Web Services Role to each of the communication plans. The specific user can also be added rather than the entire role.
 - Form apis do not exist to allow the updating and deleting comm plan forms and therefore they cannot be synced. Scenarios depend on forms. If scenarios are synchronized the forms must be created independently of the sync with the same properties in the form layout.
 -
+
+## Sync
+
+The sync module contains functions to assist in the syncronization of data with xMatters. Three functions exist with common option objects.
+
+### sync Methods
+
+#### sync.GetSyncData()
+
+#### sync.ExtractData()
+
+#### xMattersToxMatters
+
+#### DataToxMatters
+
+#### userUploadToImport
