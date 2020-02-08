@@ -1,3 +1,10 @@
+/**
+ * This module wraps many of the xMatters Rest API endpoints to simplify the interaction with the API.
+ *
+ * Documentation contained in this project contains content from https://help.xmatters.com to help describe the parameters that are used to utlimatly call the xMatters xmapi.
+ * @module index
+ */
+
 exports.annotations = require('./lib/annotations');
 exports.audits = require('./lib/audits');
 exports.convert = require('./lib/convert');
