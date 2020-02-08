@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/scenarios.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/scenarios.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const common = require('./common');
+
+/**
+ * A module related to xMatters scenarios.&lt;br>&lt;br>
+ * {@link https://help.xmatters.com/xmapi/index.html#scenarios}
+ *
+ * @module scenarios
+ */
+
+/**
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {*} scenarioId
+ * @param {Object} query A json object representing the query string parameters for this request.
+ */
+async function get(env, scenarioId, query) {
+  return common.get(env, '/api/xm/1/scenarios/', scenarioId, query, 'Scenario');
+}
+
+/**
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {*} formId
+ * @param {*} planId
+ */
+async function getMany(env, query, formId, planId) {
+  return common.getMany(env, `/api/xm/1/plans/${planId}/forms/${formId}/scenarios`, query, 'Scenarios');
+}
+
+/**
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {*} scenario
+ * @param {*} formId
+ */
+async function create(env, scenario, formId) {
+  return common.create(env, `/api/xm/1/forms/${formId}/scenarios`, scenario, 'Scenario', true);
+}
+
+/**
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {*} scenario
+ * @param {*} scenarioId
+ * @param {*} formId
+ */
+async function update(env, scenario, scenarioId, formId) {
+  return common.update(env, `/api/xm/1/forms/${formId}/scenarios/`, scenario, scenarioId, 'Scenario');
+}
+
+/**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {*} scenarios
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ */
+async function exportToImport(destination, scenarios, destinationData) {
+  const destinationForms = (destinationData.all ? destinationData.all.forms : null) || destinationData.forms;
+  const destinationPeople =
+    (destinationData.all ? destinationData.all.people : null) || destinationData.people;
+  return await scenarios.map(scenario => {
+    {
+      //set plan
+      //plan can be supplied as a string representing the name of the plan or an object with name key.
+      const formName = scenario.form.name;
+      scenario.form = common.AssignParentObject(scenario.form, destinationForms, 'name');
+
+      //if the formName was returned rather than the id.
+      if (formName === scenario.form) {
+        destination.errors.push(
+          new Error(
+            `DATA INTEGRITY ISSUE: Scenario [${scenario.name}] has form [${formName}] but a form with that name was not found in the provided destination data.`
+          )
+        );
+      }
+
+      if (scenario.permitted &amp;&amp; scenario.permitted.data) {
+        scenario.permitted = scenario.permitted.data.map(({ permissibleType, person, editor, role }) => {
+          if (permissibleType === 'PERSON') {
+            const destinationPerson = common.AssignParentObject(person, destinationPeople, 'targetName');
+
+            //if the person's targetname was returned rather than the id.
+            if (person.targetName === destinationPerson) {
+              destination.errors.push(
+                new Error(
+                  `DATA INTEGRITY ISSUE: Scenario [${scenario.name}] on form [${scenario.form.name}] person mapping failed for permitted property. Person with targetName [${person.targetName}] was not found in the provided destination data.`
+                )
+              );
+            }
+            return { permissibleType, person: { id: destinationPerson }, editor };
+          } else if (permissibleType === 'ROLE') {
+            return { permissibleType, role, editor };
+          }
+        });
+      }
+
+      if (scenario.recipients &amp;&amp; scenario.recipients.data) {
+        scenario.recipients = scenario.recipients.data.map(({ recipientType, targetName }) => {
+          return { recipientType, id: targetName };
+        });
+      }
+
+      if (scenario.voicemailOptions.every === 0) {
+        delete scenario.voicemailOptions.every;
+      }
+
+      //TODO: Remove when bug is resolved. Workound for empty description. xMatters Support Ticket #152555
+      if (scenario.description === '') scenario.description = '_';
+
+      delete scenario.position;
+      delete scenario.plan;
+      delete scenario.links;
+      delete scenario.created;
+
+      return scenario;
+    }
+  });
+}
+
+const fields = [
+  'name',
+  'description',
+  'priority',
+  'bypassPhoneIntro',
+  'escalationOverride',
+  'expirationInMinutes',
+  'overrideDeviceRestrictions'
+];
+
+/**
+ *
+ * @param {Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.} destination
+ * @param {*} sourceScenarios
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.Scenarios
+ * @param {*} options
+ */
+async function sync(destination, sourceScenarios, destinationScenarios, options) {
+  return common.syncObject(
+    'Scenario',
+    sourceScenarios,
+    destinationScenarios,
+    destination,
+    ['name', 'form'],
+    fields,
+    create,
+    update,
+    undefined,
+    options,
+    'form'
+  );
+}
+
+exports.get = get;
+exports.getMany = getMany;
+exports.create = create;
+exports.update = update;
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSupressions.html">eventSupressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-index.html">index</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CsvToJson">CsvToJson</a></li><li><a href="global.html#CsvToJsonFromFile">CsvToJsonFromFile</a></li><li><a href="global.html#getSupervisors">getSupervisors</a></li><li><a href="global.html#userUploadDevicesToExport">userUploadDevicesToExport</a></li><li><a href="global.html#userUploadToExport">userUploadToExport</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Feb 08 2020 14:59:21 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/dynamicTeams.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/dynamicTeams.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const common = require('./common');
+
+/**
+ * A module related to xMatters dynamic teams.&lt;br>&lt;br>
+ * {@link https://help.xmatters.com/xmapi/index.html#dynamic-teams}
+ *
+ * @module dynamicTeams
+ */
+
+/**
+ * Get a dynamic team from xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-dynamic-team}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} dynamicTeamId The unique id of the dynamic team.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;DynamicTeam>} Dynamic Team Object Requested
+ */
+async function get(env, dynamicTeamId, query) {
+  return common.get(env, '/api/xm/1/dynamic-teams/', dynamicTeamId, query, 'Dynamic Team');
+}
+
+/**
+ * Get all dynamic teams from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-dynamic-teams}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;DynamicTeam[]>} Array of Dynamic Team Objects Requested
+ */
+async function getMany(env, query) {
+  return common.getMany(env, '/api/xm/1/dynamic-teams', query, 'Dynamic Teams');
+}
+
+/**
+ * Get all dynamic teams members from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-dynamic-team-members}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} dynamicTeamId The unique id or targetNameof the dynamic team.
+ * @returns {Promise&lt;module:people.Person[]>} Array of Person Objects from the Dynamic Team Requested
+ */
+async function getMembers(env, query, dynamicTeamId) {
+  return common.getMany(
+    env,
+    `/api/xm/1/dynamic-teams/${dynamicTeamId}/members`,
+    query,
+    'Dynamic Team Members'
+  );
+}
+
+/**
+ * Create a dynamic team in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#create-a-dynamic-team}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {DynamicTeam} dynamicTeam
+ * @returns {Promise&lt;DynamicTeam>} Dynamic Team Object Created
+ */
+async function create(env, dynamicTeam) {
+  return common.create(env, '/api/xm/1/dynamic-teams', dynamicTeam, 'Dynamic Team', true);
+}
+
+/**
+ * Update a dynamic team in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#update-a-dynamic-team}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {DynamicTeam} dynamicTeam
+ * @param {string} dynamicTeamId The unique identifier (id) of the dynamic team you want to modify.
+ * @returns {Promise&lt;DynamicTeam>} Dynamic Team Object Updated
+ */
+async function update(env, dynamicTeam, dynamicTeamId) {
+  return common.update(env, '/api/xm/1/dynamic-teams/', dynamicTeam, dynamicTeamId, 'Dynamic Team');
+}
+
+/**
+ * Delete a dynamic team in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#delete-a-dynamic-team}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} dynamicTeamId The unique identifier (id) or name (targetName) of the dynamic team.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - MIMTeam1&lt;br>
+ * - a6341d69-5683-4621-b8c8-f2e728f6752q
+ * @returns {Promise}
+ */
+async function _delete(env, dynamicTeamId) {
+  await common.delete(env, '/api/xm/1/dynamic-teams/', dynamicTeamId, 'Dynamic Team');
+}
+
+/**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {DynamicTeam[]} dynamicTeams Array of Dynamic Teams to transform.
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ * @param {Object} options
+ */
+async function exportToImport(destination, dynamicTeams, destinationData, options) {
+  const destinationPeople =
+    (destinationData.all ? destinationData.all.people : null) || destinationData.people;
+  const { defaultSupervisorId } = options;
+  return dynamicTeams.map(dynamicTeam => {
+    {
+      delete dynamicTeam.links;
+
+      if (dynamicTeam.criteria &amp;&amp; dynamicTeam.criteria.criterion &amp;&amp; dynamicTeam.criteria.criterion.data) {
+        dynamicTeam.criteria.criterion = dynamicTeam.criteria.criterion.data.map(c => c);
+      }
+
+      if (dynamicTeam.observers &amp;&amp; dynamicTeam.observers.data) {
+        dynamicTeam.observers = dynamicTeam.observers.data;
+        dynamicTeam.observers = dynamicTeam.observers.map(observer => {
+          return { name: observer.name };
+        });
+      }
+
+      //BUG IN XMAPI #152283 remove this code if empty array is allowed to unset observers
+      if (dynamicTeam.observers &amp;&amp; dynamicTeam.observers.length === 0) {
+        //delete record.observers;
+      }
+
+      if (dynamicTeam.supervisors &amp;&amp; dynamicTeam.supervisors.data) {
+        dynamicTeam.supervisors = dynamicTeam.supervisors.data;
+        dynamicTeam.supervisors = dynamicTeam.supervisors.map(supervisor => {
+          const destinationSupervisor = destinationPeople.find(
+            ({ targetName }) => targetName === supervisor.targetName
+          );
+
+          if (!destinationSupervisor) {
+            destination.errors.push(
+              new Error(
+                `DATA INTEGRITY ISSUE: Supervisor mapping failed. Dynamic Team [${dynamicTeam.targetName}] has a supervisor with targetName [${supervisor.targetName}] but this supervisor was not found in the provided destination data.`
+              )
+            );
+          } else {
+            return destinationSupervisor.id;
+          }
+        });
+      }
+
+      //pull any null values from the supervisor array. will be null if matches are not found.
+      if (dynamicTeam.supervisors) {
+        dynamicTeam.supervisors = dynamicTeam.supervisors.filter(function(el) {
+          return el != null;
+        });
+
+        //groups require at least one supervisor. If supervisors were removed then add a default.
+        if (dynamicTeam.supervisors.length === 0 &amp;&amp; defaultSupervisorId) {
+          dynamicTeam.supervisors = [defaultSupervisorId];
+        }
+      }
+
+      return dynamicTeam;
+    }
+  });
+}
+
+/**
+ * The key values from the object that can be sychronized.
+ */
+const fields = [
+  //'id',
+  'targetName',
+  'recipientType',
+  //'externallyOwned',
+  'supervisors',
+  'observers',
+  'criteria'
+];
+
+/**
+ * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {DynamicTeam[]} sourceDynamicTeams  An array of the dynamic team objects to synchronize from the source data.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.DynamicTeams
+ * @param {Object} options
+ * @returns {Promise&lt;module:sync.SyncResults>}
+ */
+async function sync(destination, sourceDynamicTeams, destinationDynamicTeams, options) {
+  return common.syncObject(
+    'Dynamic Teams',
+    sourceDynamicTeams,
+    destinationDynamicTeams,
+    destination,
+    'targetName',
+    fields,
+    create,
+    update,
+    _delete,
+    options
+  );
+}
+
+exports.get = get;
+exports.getMany = getMany;
+exports.getMembers = getMembers;
+exports.create = create;
+exports.update = update;
+exports.delete = _delete;
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSupressions.html">eventSupressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-index.html">index</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li></ul><h3>Global</h3><ul><li><a href="global.html#CsvToJson">CsvToJson</a></li><li><a href="global.html#CsvToJsonFromFile">CsvToJsonFromFile</a></li><li><a href="global.html#getSupervisors">getSupervisors</a></li><li><a href="global.html#userUploadDevicesToExport">userUploadDevicesToExport</a></li><li><a href="global.html#userUploadToExport">userUploadToExport</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sat Feb 08 2020 14:59:21 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
