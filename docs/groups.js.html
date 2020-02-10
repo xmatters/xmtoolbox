@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: groups.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                     
+                        <h1 class="navbar-item">xmtoolbox Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                 
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                    
+                        <div class="navbar-item">
+                            <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
+                                Github
+                            </a>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>groups.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const common = require('./common');
+
+/**
+ * A module related to xMatters groups.&lt;br>&lt;br>
+ * {@link https://help.xmatters.com/xmapi/index.html#groups}
+ *
+ * @module groups
+ */
+
+/**
+ * Get a group from xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {*} groupId The unique identifier (id) or name (targetName) of the group. &lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Oracle Administrators&lt;br>
+ * - 438e9245-b32d-445f-916bd3e07932c892
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;Group>} Group Object Requested
+ */
+async function get(env, groupId, query) {
+  return common.get(env, '/api/xm/1/groups/', groupId, query, 'Group');
+}
+
+/**
+ * Get all groups from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-groups}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;Group[]>} Array of Group Objects Requested
+ */
+async function getMany(env, query) {
+  return common.getMany(env, '/api/xm/1/groups', query, 'Groups');
+}
+
+/**
+ * Get all group supervisors from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-group-39-s-supervisors}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} groupId The unique identifier (id) or name (targetName) of the group
+ * @returns {Promise&lt;Person[]>} Array of Person Objects Requested
+ */
+async function getSupervisors(env, query, groupId) {
+  return common.getMany(env, `/api/xm/1/groups/${groupId}/supervisors`, query, 'Group Supervisors');
+}
+
+/**
+ * Create a group in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#create-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Group} group {@link https://help.xmatters.com/xmapi/index.html#group-object}
+ * @returns {Promise&lt;Group>} Group Object Created
+ */
+async function create(env, group) {
+  return common.create(env, '/api/xm/1/groups', group, 'Group', true);
+}
+
+/**
+ * Update a group in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#modify-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Group} group {@link https://help.xmatters.com/xmapi/index.html#group-object}
+ * @param {string} groupId The unique identifier (id) of the group. &lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - 438e9245-b32d-445f-916bd3e07932c892
+ * @returns {Promise&lt;Group>} Group Object Updated
+ */
+async function update(env, group, groupId) {
+  return common.update(env, '/api/xm/1/groups/', group, groupId, 'Group');
+}
+
+/**
+ * Delete a group in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#delete-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} groupId The unique identifier (id) or name (targetName) of the group. &lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Oracle Administrators&lt;br>
+ * - 438e9245-b32d-445f-916bd3e07932c892
+ * @returns {Promise}
+ * @name delete
+ */
+async function _delete(env, groupId) {
+  await common.delete(env, '/api/xm/1/groups/', groupId, 'Group');
+}
+
+/**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Group[]} groups Array of groups to transform.
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ * @param {Object} options
+ * @returns {Promise}
+ */
+async function exportToImport(destination, groups, destinationData, options) {
+  const destinationPeople =
+    (destinationData.all ? destinationData.all.people : null) || destinationData.people;
+  const destinationSites = (destinationData.all ? destinationData.all.sites : null) || destinationData.sites;
+  const { defaultSupervisorId } = options;
+
+  return groups.map(group => {
+    {
+      delete group.links;
+
+      if (group.site &amp;&amp; group.site.name) {
+        group.site = destinationSites.find(({ name }) => group.site.name === name).id;
+      }
+
+      if (group.observers &amp;&amp; group.observers.data) {
+        group.observers = group.observers.data;
+
+        group.observers = group.observers.map(observer => observer.name);
+      }
+      if (group.supervisors &amp;&amp; group.supervisors.data) {
+        group.supervisors = group.supervisors.data;
+        group.supervisors = group.supervisors.map(supervisor => {
+          const destinationSupervisor = destinationPeople.find(
+            ({ targetName }) => targetName === supervisor.targetName
+          );
+
+          if (!destinationSupervisor) {
+            destination.errors.push(
+              new Error(
+                `DATA INTEGRITY ISSUE: Supervisor mapping failed. Group [${group.targetName}] has a supervisor with targetName [${supervisor.targetName}] but this supervisor was not found in the provided destination data.`
+              )
+            );
+          } else {
+            return destinationSupervisor.id;
+          }
+        });
+      }
+
+      //pull any null values from the supervisor array. will be null if matches are not found.
+      if (group.supervisors) {
+        group.supervisors = group.supervisors.filter(function(el) {
+          return el != null;
+        });
+
+        //groups require at least one supervisor. If supervisors were removed then add a default.
+        if (group.supervisors.length === 0 &amp;&amp; defaultSupervisorId) {
+          group.supervisors = [defaultSupervisorId];
+        }
+      }
+
+      return group;
+    }
+  });
+}
+
+/**
+ * The key values from the object that can be synchronized.
+ */
+const fields = [
+  'allowDuplicates',
+  //'externallyOwned',
+  'description',
+  //'id',
+  'externalKey',
+  'observedByAll',
+  'observers',
+  'recipientType',
+  'site',
+  'status',
+  'supervisors',
+  'targetName',
+  'useDefaultDevices'
+];
+
+/**
+ * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param [Group[]]} sourceGroups An array of the group objects to synchronize from the source data.
+ * @param {Group[]} destinationGroups An array of the group objects to synchronize from the destination data.
+ * @param {Object} options
+ * @returns {Promise&lt;module:sync.SyncResults>}
+ */
+async function sync(destination, sourceGroups, destinationGroups, options) {
+  return common.syncObject(
+    'Group',
+    sourceGroups,
+    destinationGroups,
+    destination,
+    'targetName',
+    fields,
+    create,
+    update,
+    _delete,
+    options
+  );
+}
+
+exports.get = get;
+exports.getMany = getMany;
+exports.getSupervisors = getSupervisors;
+exports.create = create;
+exports.update = update;
+exports.delete = _delete;
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

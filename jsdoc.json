@@ -1,0 +1,37 @@
+{
+  "source": {
+    "includePattern": ".+\\.js(doc|x)?$",
+    "include": ["./lib"],
+    "exclude": ["node_modules", "./lib/convert"]
+  },
+  "recurseDepth": 10,
+  "opts": {
+    "destination": "./docs/",
+    "recurse": true,
+    "template": "node_modules/better-docs"
+  },
+  "tags": {
+    "allowUnknownTags": ["category"]
+  },
+  "plugins": ["node_modules/better-docs/category"],
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    //"default": {
+    //  "staticFiles": {
+    //    "include": ["./docs-src/statics"]
+    //  }
+    //},
+    "better-docs": {
+      "name": "xmtoolbox Documentation",
+      //"logo": "images/logo.png",
+      "hideGenerator": false,
+      "navigation": [
+        {
+          "label": "Github",
+          "href": "https://github.com/brannonvann/xmtoolbox"
+        }
+      ]
+    }
+  }
+}

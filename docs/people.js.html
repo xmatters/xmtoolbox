@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: people.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                     
+                        <h1 class="navbar-item">xmtoolbox Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                 
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                    
+                        <div class="navbar-item">
+                            <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
+                                Github
+                            </a>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>people.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const common = require('./common');
+
+/**
+ * A module related to xMatters people.&lt;br>&lt;br>
+ * {@link https://help.xmatters.com/xmapi/index.html#people}
+ *
+ * @module people
+ */
+
+/**
+ * Get a person from xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-person-by-id}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {*} personId The unique identifier (id) or name (targetName) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - mmcbride
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;Person>} Person Object Requested
+ */
+async function get(env, personId, query) {
+  return common.get(env, '/api/xm/1/people/', personId, query, 'Person');
+}
+
+/**
+ * Get all people from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-people}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @returns {Promise&lt;Person[]>} Array of Person Objects Requested
+ */
+async function getMany(env, query) {
+  return common.getMany(env, '/api/xm/1/people', query, 'People');
+}
+
+/**
+ * Get all supervisors for a person from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-person-39-s-supervisors}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} personId The unique identifier (id) or name (targetName) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - mmcbride
+ * @returns {Promise&lt;Person[]>} Array of Person Objects Requested
+ */
+async function getSupervisors(env, query, personId) {
+  return common.getMany(env, `/api/xm/1/people/${personId}/supervisors`, query, 'Person Supervisors');
+}
+
+/**
+ * Get all devices for a person from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-person-39-s-devices}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} personId The unique identifier (id) or name (targetName) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - mmcbride
+ * @returns {Promise&lt;Device[]>} Array of Device Objects Requested
+ */
+async function getDevices(env, query, personId) {
+  return common.getMany(env, `/api/xm/1/people/${personId}/devices`, query, 'Person Devices');
+}
+
+/**
+ * Get all groups for a person from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-person-39-s-groups}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} personId The unique identifier (id) or name (targetName) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - mmcbride
+ * @returns {Promise&lt;Group[]>} Array of Group Objects Requested
+ */
+async function getGroups(env, query, personId) {
+  return common.getMany(env, `/api/xm/1/people/${personId}/group-memberships`, query, 'Person Groups');
+}
+
+/**
+ * Create a person in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#create-a-person}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Person} person {@link https://help.xmatters.com/xmapi/index.html#person-object}
+ * @returns {Promise&lt;Person>} Person Object Created
+ */
+async function create(env, person) {
+  return common.create(env, '/api/xm/1/people', person, 'Person', true);
+}
+
+/**
+ * Update a person in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#modify-a-person}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Person} person {@link https://help.xmatters.com/xmapi/index.html#person-object}
+ * @param {string} personId The unique identifier (id) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Person>} Person Object Updated
+ */
+async function update(env, person, personId) {
+  return common.update(env, '/api/xm/1/people/', person, personId, 'Person');
+}
+
+/**
+ * Delete a person in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#delete-a-person}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} personId The unique identifier (id) or name (targetName) of the person.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - mmcbride
+ * @returns {Promise}
+ * @name delete
+ */
+async function _delete(env, personId) {
+  return common.delete(env, '/api/xm/1/people/', personId, 'Person');
+}
+
+/**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Person[]} people Array of person objects to transform.
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ * @returns {Promise}
+ */
+async function exportToImport(destination, people, destinationData) {
+  const destinationPeople =
+    (destinationData.all ? destinationData.all.people : null) || destinationData.people;
+  const destinationSites = (destinationData.all ? destinationData.all.sites : null) || destinationData.sites;
+  return people.map(person => {
+    {
+      delete person.links;
+      //handle import from xMatters and simpler file import like just the site name.
+      if (person.site) {
+        person.site = destinationSites.find(
+          ({ name }) => person.site.name === name || person.site === name
+        ).id;
+      }
+
+      if (person.supervisors) {
+        person.supervisors = person.supervisors.map(supervisor => {
+          const destinationSupervisor = destinationPeople.find(
+            //support the xMatters import format and a simpler array of targetNames that might come from a import file.
+            destinationPerson =>
+              supervisor === destinationPerson.targetName ||
+              (supervisor.targetName &amp;&amp; supervisor.targetName === destinationPerson.targetName)
+          );
+
+          if (!destinationSupervisor) {
+            destination.errors.push(
+              new Error(
+                `DATA INTEGRITY ISSUE: Supervisor mapping failed. Person [${person.targetName}] has a supervisor with targetName [${supervisor.targetName}] but this supervisor was not found in the provided destination data.`
+              )
+            );
+          } else {
+            return destinationSupervisor.id;
+          }
+        });
+      }
+
+      //pull any null values from the supervisor array. will be null if matches are not found.
+      if (person.supervisors) {
+        person.supervisors = person.supervisors.filter(function(el) {
+          return el != null;
+        });
+      }
+
+      //data from xMatters....
+      if (person.roles.data) {
+        person.roles = person.roles.data.map(d => d.name);
+      }
+
+      return person;
+    }
+  });
+}
+
+/**
+ * The key values from the object that can be synchronized.
+ */
+const fields = [
+  'externalKey',
+  //'externallyOwned',
+  'firstName',
+  //'id',
+  'language',
+  'lastName',
+  'phoneLogin',
+  'properties',
+  'recipientType',
+  'roles',
+  'site',
+  'status',
+  'supervisors',
+  'targetName',
+  'timezone',
+  'webLogin'
+];
+
+/**
+ * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Person[]} sourcePeople An array of the person objects to synchronize from the source data.
+ * @param {Person[]} destinationPeople An array of the person objects to synchronize from the destination data.
+ * @param {Object} options
+ * @returns {Promise&lt;module:sync.SyncResults>}
+ */
+async function sync(destination, sourcePeople, destinationPeople, options) {
+  return common.syncObject(
+    'Person',
+    sourcePeople,
+    destinationPeople,
+    destination,
+    'targetName',
+    fields,
+    create,
+    update,
+    _delete,
+    options
+  );
+}
+
+exports.get = get;
+exports.getMany = getMany;
+exports.getDevices = getDevices;
+exports.getSupervisors = getSupervisors;
+exports.getGroups = getGroups;
+exports.create = create;
+exports.update = update;
+exports.delete = _delete;
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

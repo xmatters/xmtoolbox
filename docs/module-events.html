@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: events</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                     
+                        <h1 class="navbar-item">xmtoolbox Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                 
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                    
+                        <div class="navbar-item">
+                            <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
+                                Github
+                            </a>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Module</p>
+                        <h1>events</h1>
+                    </header>
+                    
+                    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">A module related to xMatters events.<br><br>
+<a href="https://help.xmatters.com/xmapi/index.html#events">https://help.xmatters.com/xmapi/index.html#events</a></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line3">line 3</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h3 class="title"><span>Methods</span></h3>
+            <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~create">
+        <a class="href-link" href="#~create">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                create<span class="signature">(env, event, functionId)</span><span class="type-signature"> &rarr; {Promise.&lt;Event>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Create an event in xMatters<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#trigger-an-event">https://help.xmatters.com/xmapi/index.html#trigger-an-event</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>event</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Event</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><a href="https://help.xmatters.com/xmapi/index.html#event-object">https://help.xmatters.com/xmapi/index.html#event-object</a></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>functionId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The id of the function. This may be found Integration or Flow Designer URL.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line73">line 73</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Event Object Created</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Event></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~get">
+        <a class="href-link" href="#~get">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                get<span class="signature">(env, eventId, query)</span><span class="type-signature"> &rarr; {Promise.&lt;Event>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Get a event from xMatters<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#get-an-event">https://help.xmatters.com/xmapi/index.html#get-an-event</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>eventId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The unique identifier or id of the event.<br><br>
+Examples:<br>
+- “24abd4c0-bff3-4381-9f84-678580b24428”<br>
+- “408005”<br><br>
+
+Note: We recommend using the UUID, since the event ID number might not always return results. To find the id or UUID for an event, use event.getMany() or locate the Event UUID entry on the event’s Properties screen in the web interface.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>query</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">A json object representing the query string parameters for this request.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line25">line 25</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Event Object Requested</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Event></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~getMany">
+        <a class="href-link" href="#~getMany">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                getMany<span class="signature">(env, query)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;Event>>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Get all events from xMatters matching the query. Please refer to the link below for the available query parameters.<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#get-events">https://help.xmatters.com/xmapi/index.html#get-events</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>query</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">A json object representing the query string parameters for this request.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line38">line 38</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Array of Event Objects Requested</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Array.&lt;Event>></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~getManyUserDeliveries">
+        <a class="href-link" href="#~getManyUserDeliveries">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                getManyUserDeliveries<span class="signature">(env, query, eventId)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;UserDeliveryData>>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Get all user delivery data for an event in xMatters matching the query. Please refer to the link below for the available query parameters.<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#get-user-delivery-data">https://help.xmatters.com/xmapi/index.html#get-user-delivery-data</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>query</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">A json object representing the query string parameters for this request.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>eventId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The unique identifier or id of the event.<br><br>
+Examples:<br>
+- “24abd4c0-bff3-4381-9f84-678580b24428”<br>
+- “408005”</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line55">line 55</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Array of User Delivery Data Objects Requested</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Array.&lt;UserDeliveryData>></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~update">
+        <a class="href-link" href="#~update">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                update<span class="signature">(env, event, eventId)</span><span class="type-signature"> &rarr; {Promise.&lt;Event>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Update an event [status] in xMatters<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#change-the-status-of-an-event">https://help.xmatters.com/xmapi/index.html#change-the-status-of-an-event</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>event</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Event</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><a href="https://help.xmatters.com/xmapi/index.html#event-object">https://help.xmatters.com/xmapi/index.html#event-object</a></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>eventId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The unique identifier or id of the event.<br><br>
+Examples:<br>
+- “24abd4c0-bff3-4381-9f84-678580b24428”<br>
+- “408005”<br><br>
+
+Note: We recommend using the UUID, since the event ID number might not always return results. To find the id or UUID for an event, use event.getMany() or locate the Event UUID entry on the event’s Properties screen in the web interface.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="events.js.html" class="button">View Source</a>
+            <span>
+                <a href="events.js.html">events.js</a>, <a href="events.js.html#line93">line 93</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Event Object Updated</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Event></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

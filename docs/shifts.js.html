@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: shifts.js</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+</head>
+
+<body>
+    <div id="stickyNavbarOverlay"></div>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                     
+                        <h1 class="navbar-item">xmtoolbox Documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                 
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                    
+                        <div class="navbar-item">
+                            <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
+                                Github
+                            </a>
+                        </div>
+                    
+                    </div>
+                </div>
+                
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Source</p>
+                        <h1>shifts.js</h1>
+                    </header>
+                    
+                    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const common = require('./common');
+
+/**
+ * A module related to xMatters shifts.&lt;br>&lt;br>
+ * {@link https://help.xmatters.com/xmapi/index.html#shifts}
+ *
+ * @module shifts
+ */
+
+/**
+ * Get a shift from xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-a-shift}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} shiftId The unique identifier (id) of the shift to update.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database&lt;br>
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Shift>} Shift Object Requested
+ */
+async function get(env, shiftId, query, groupId) {
+  return common.get(env, `/api/xm/1/groups/${groupId}/shifts/`, shiftId, query, `Shift`);
+}
+
+/**
+ * Get all shifts in a group from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-shifts-in-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database&lt;br>
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Shift[]>} Array of Shift Objects Requested
+ */
+async function getMany(env, query, groupId) {
+  return common.getMany(env, `/api/xm/1/groups/${groupId}/shifts`, query, 'Shifts');
+}
+
+/**
+ * Get all shift members in a shift from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#get-shifts-in-a-group}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Object} query A json object representing the query string parameters for this request.
+ * @param {string} shiftId The unique identifier (id) or name of the of the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * - Morning
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database&lt;br>
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Shift>} Shift Object Requested
+ */
+async function getMembers(env, query, shiftId, groupId) {
+  return common.getMany(env, `/api/xm/1/groups/${groupId}/shifts/${shiftId}/members`, query, 'Shift Members');
+}
+
+/**
+ * Create a shift in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#create-a-shift}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Shift} shift {@link https://help.xmatters.com/xmapi/index.html#shift-object}
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Shift>} Shift Object Created
+ */
+async function create(env, shift, groupId) {
+  return common.create(env, `/api/xm/1/groups/${groupId}/shifts/`, shift, 'Shift', true);
+}
+
+/**
+ * Update a shift in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#create-a-shift}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {Shift} shift {@link https://help.xmatters.com/xmapi/index.html#shift-object}
+ * @param {string} shiftId The unique identifier (id) of the shift to update.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;Shift>} Shift Object Updated
+ */
+async function update(env, shift, shiftId, groupId) {
+  return common.update(env, `/api/xm/1/groups/${groupId}/shifts/`, shift, shiftId, 'Shift');
+}
+
+/**
+ * Delete a shift in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#delete-a-shift}
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {string} shiftId The unique identifier (id) or name (name) of the shift to delete.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Morning
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @param {string} groupId   The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise}
+ * @name delete
+ */
+async function _delete(env, shiftId, groupId) {
+  await common.delete(env, `/api/xm/1/groups/${groupId}/shifts/`, shiftId, 'Shift');
+}
+
+/**
+ * Add a member to a shift in xMatters&lt;br>&lt;br>
+ *
+ * {@link https://help.xmatters.com/xmapi/index.html#add-a-member-to-a-shift}
+ *
+ * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
+ * @param {ShiftMember} member {@link https://help.xmatters.com/xmapi/index.html#shift-member-object}
+ * @param {string} shiftId The unique identifier (id) or name (name) of the shift to delete.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Morning
+ * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @param {string} groupId The unique identifier (id) or name (name) of the group that contains the shift.&lt;br>&lt;br>
+ * Examples:&lt;br>
+ * - Database
+ * - a5341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
+ * @returns {Promise&lt;ShiftMember>} ShiftMember Object Created
+ */
+async function addMember(env, member, shiftId, groupId) {
+  return common.create(
+    env,
+    `/api/xm/1/groups/${groupId}/shifts/${shiftId}/members`,
+    member,
+    `Add Member to Shift`
+  );
+}
+
+/**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Shift[]} shifts {@link https://help.xmatters.com/xmapi/index.html#shift-object}
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ * @returns {Promise}
+ */
+async function exportToImport(destination, shifts, destinationData) {
+  const destinationPeople =
+    (destinationData.all ? destinationData.all.people : null) || destinationData.people;
+
+  const destinationGroups =
+    (destinationData.all ? destinationData.all.groups : null) || destinationData.groups;
+  return await shifts.map(shift => {
+    {
+      //set group
+      //group can be supplied as a string representing the targetName of the group or an object with targetName key.
+      if (shift.group) {
+        if (shift.group.targetName) {
+          shift.group = shift.group.targetName;
+        }
+        //attempt to find a matching group and use it's id
+        if (destinationGroups) {
+          const destinationGroup = destinationGroups.find(({ targetName }) => targetName === shift.group);
+          if (destinationGroup &amp;&amp; destinationGroup.id) shift.group = destinationGroup.id;
+        }
+      }
+
+      if (shift.members &amp;&amp; shift.members.data) {
+        shift.members = shift.members.data;
+
+        shift.members = shift.members.map(member => {
+          const destinationMemberRecipient = destinationPeople.find(
+            ({ targetName }) => targetName === member.recipient.targetName
+          );
+
+          //2020-Jan-27: "400: If specified, escalation type needs to be NONE when delay is specified to be 0"
+          if (member.delay === 0) {
+            member.escalationType = 'NONE';
+          }
+
+          if (!destinationMemberRecipient) {
+            destination.errors.push(
+              new Error(
+                `DATA INTEGRITY ISSUE: Shift Member mapping failed. Group [${shift.group.targetName}] has a Shift [${shift.name}] which has a member with targetName [${member.targetName}] but this member was not found in the provided destination data.`
+              )
+            );
+            return null;
+          } else {
+            delete member.shift;
+            member.recipient = destinationMemberRecipient.id;
+            return member;
+          }
+        });
+      }
+      delete shift.links;
+      //delete shift.group;
+      return shift;
+    }
+  });
+}
+
+/**
+ * The key values from the object that can be synchronized.
+ */
+const fields = [
+  //'id',
+  //'group',
+  //'links',
+  'name',
+  'start',
+  'end',
+  'rotationType',
+  'rotation',
+  'timezone',
+  'recurrence',
+  'members'
+];
+
+/**
+ * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Shift[]} sourceShifts An array of the shift objects to synchronize from the source data.
+ * @param {Shift[]} destinationShifts An array of the shift objects to synchronize from the destination data.
+ * @param {Object} options
+ */
+async function sync(destination, sourceShifts, destinationShifts, options) {
+  return common.syncObject(
+    'Shift',
+    sourceShifts,
+    destinationShifts,
+    destination,
+    ['name', 'group'],
+    fields,
+    create,
+    update, //TODO: 2020-Jan-29: Need shift updates to be supported https://xmexternal.zendesk.com/agent/tickets/152353
+    _delete,
+    options,
+    'group'
+  );
+}
+
+exports.get = get;
+exports.getMany = getMany;
+exports.getMembers = getMembers;
+exports.create = create;
+exports.delete = _delete;
+exports.addMember = addMember;
+/*
+exports.objects = {
+  shift,
+  recipientPointer,
+  shiftMember,
+  shiftRecurrence,
+  end
+};
+*/
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="scripts/app.min.js"></script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -20,5 +20,8 @@
     "lodash": "^4.17.15",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "better-docs": "^1.4.7"
   }
 }
