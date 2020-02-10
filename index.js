@@ -37,5 +37,5 @@ exports.subscriptionForms = require('./lib/subscriptionForms');
 exports.subscriptions = require('./lib/subscriptions');
 exports.sync = require('./lib/sync');
 exports.temporaryAbsences = require('./lib/temporaryAbsences');
-exports.uploadUsers = require('./lib/uploads');
+exports.uploads = require('./lib/uploads');
 //exports.common = require('./lib/common');
