@@ -28,6 +28,7 @@ exports.planConstants = require('./lib/planConstants');
 exports.planEndpoints = require('./lib/planEndpoints');
 exports.planProperties = require('./lib/planProperties');
 exports.plans = require('./lib/plans');
+exports.roles = require('./lib/roles');
 exports.scenarios = require('./lib/scenarios');
 exports.sharedLibraries = require('./lib/sharedLibraries');
 exports.shifts = require('./lib/shifts');
