@@ -1,13 +1,13 @@
 /**
  * This module wraps many of the xMatters Rest API endpoints to simplify the interaction with the API.
  *
- * Documentation contained in this project contains content from https://help.xmatters.com to help describe the parameters that are used to utlimatly call the xMatters xmapi.
+ * Documentation contained in this project contains content from https://help.xmatters.com to help describe the parameters that are used to ultimately call the xMatters xmapi.
  * @module index
  */
 
 exports.annotations = require('./lib/annotations');
 exports.audits = require('./lib/audits');
-exports.convert = require('./lib/convert');
+//exports.convert = require('./lib/convert');
 exports.deviceNames = require('./lib/deviceNames');
 exports.devices = require('./lib/devices');
 exports.deviceTypes = require('./lib/deviceTypes');
@@ -15,7 +15,7 @@ exports.dictionary = require('./lib/dictionary');
 exports.dynamicTeams = require('./lib/dynamicTeams');
 exports.environments = require('./lib/environments');
 exports.events = require('./lib/events');
-exports.eventSupressions = require('./lib/eventSupressions');
+exports.eventSuppressions = require('./lib/eventSuppressions');
 exports.forms = require('./lib/forms');
 exports.groupMembers = require('./lib/groupMembers');
 exports.groups = require('./lib/groups');
@@ -37,4 +37,4 @@ exports.subscriptions = require('./lib/subscriptions');
 exports.sync = require('./lib/sync');
 exports.temporaryAbsences = require('./lib/temporaryAbsences');
 exports.uploadUsers = require('./lib/uploads');
-exports.common = require('./lib/common');
+//exports.common = require('./lib/common');
