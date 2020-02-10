@@ -1,4 +1,4 @@
-# xm-toolbox
+# xmtoolbox
 
 <aside class="notice">
 This package is a work in progress. Currently updating JSDocs to properly document functions and adding sync module functionality.
@@ -55,26 +55,11 @@ async function GetPerson(env, id) {
 
 ## API
 
+The API documentation is available at [https://brannonvann.github.io/xmtoolbox/index.html](https://brannonvann.github.io/xmtoolbox/index.html).
+
 ## Notes
 
 - Create Plan doesn't support loggingLevel but update does. For synchronizations this means there will be an update the second time the sync is run to update the loggingLevel if the logging level is different in the source than the default.
 - Creating and Updating xMatters Type endpoints in comm plans is not supported via API. They exist in every plan but require configuration in the UI to set the authenticating user.
 - Syncing any communication plan related data such as the plans, forms, scenarios, plan properties, plan constants, plan endpoints, shared libraries, or integrations require that the rest user have edit access for the communication plan(s). One way to accomplish this is to add the Rest Web Services Role to each of the communication plans. The specific user can also be added rather than the entire role.
 - Form apis do not exist to allow the updating and deleting comm plan forms and therefore they cannot be synced. Scenarios depend on forms. If scenarios are synchronized the forms must be created independently of the sync with the same properties in the form layout.
--
-
-## Sync
-
-The sync module contains functions to assist in the synchronization of data with xMatters. Three functions exist with common option objects.
-
-### sync Methods
-
-#### sync.GetSyncData()
-
-#### sync.ExtractData()
-
-#### xMattersToxMatters
-
-#### DataToxMatters
-
-#### userUploadToImport
