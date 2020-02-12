@@ -1,10 +1,7 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>JSDoc: sync.js</title>
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
@@ -14,69 +11,110 @@
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
-    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
-</head>
+    <link
+      href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css" />
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css" />
+  </head>
 
-<body>
+  <body>
     <div id="stickyNavbarOverlay"></div>
     <div class="top-navbar">
-        <div class="container">
-            <nav class="navbar" role="navigation" aria-label="main navigation">
-                <div class="navbar-brand">
-                    
-                     
-                        <h1 class="navbar-item">xmtoolbox Documentation</h1>
-                    
-                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-                 
-                <div class="navbar-menu">
-                    <div class="navbar-end">
-                    
-                        <div class="navbar-item">
-                            <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
-                                Github
-                            </a>
-                        </div>
-                    
-                    </div>
-                </div>
-                
-            </nav>
-        </div>
+      <div class="container">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <h1 class="navbar-item">xmtoolbox Documentation</h1>
+
+            <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
+
+          <div class="navbar-menu">
+            <div class="navbar-end">
+              <div class="navbar-item">
+                <a href="https://github.com/brannonvann/xmtoolbox" target="_blank">
+                  Github
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
     </div>
     <div class="container">
-        <div class="columns">
-            <div class="column is-3" id="sidebarNav">
-                <div class="sidebar">
-                    <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
-                    </nav>
-                </div>
-            </div>
-            <div class="column is-9-desktop">
-                <div class="content" id="main-content-wrapper">
-                    <header class="page-title">
-                        <p>Source</p>
-                        <h1>sync.js</h1>
-                    </header>
-                    
-                    
+      <div class="columns">
+        <div class="column is-3" id="sidebarNav">
+          <div class="sidebar">
+            <nav>
+              <h2><a href="index.html">Home</a></h2>
+              <div class="category">
+                <h3>Modules</h3>
+                <ul>
+                  <li><a href="module-annotations.html">annotations</a></li>
+                  <li><a href="module-audits.html">audits</a></li>
+                  <li><a href="module-common.html">common</a></li>
+                  <li><a href="module-deviceNames.html">deviceNames</a></li>
+                  <li><a href="module-devices.html">devices</a></li>
+                  <li><a href="module-deviceTypes.html">deviceTypes</a></li>
+                  <li><a href="module-dictionary.html">dictionary</a></li>
+                  <li><a href="module-dynamicTeams.html">dynamicTeams</a></li>
+                  <li><a href="module-environments.html">environments</a></li>
+                  <li><a href="module-events.html">events</a></li>
+                  <li><a href="module-eventSuppressions.html">eventSuppressions</a></li>
+                  <li><a href="module-forms.html">forms</a></li>
+                  <li><a href="module-groupMembers.html">groupMembers</a></li>
+                  <li><a href="module-groups.html">groups</a></li>
+                  <li><a href="module-importJobs.html">importJobs</a></li>
+                  <li><a href="module-integrations.html">integrations</a></li>
+                  <li><a href="module-oauth.html">oauth</a></li>
+                  <li><a href="module-onCalls.html">onCalls</a></li>
+                  <li><a href="module-people.html">people</a></li>
+                  <li><a href="module-planConstants.html">planConstants</a></li>
+                  <li><a href="module-planEndpoints.html">planEndpoints</a></li>
+                  <li><a href="module-planProperties.html">planProperties</a></li>
+                  <li><a href="module-plans.html">plans</a></li>
+                  <li><a href="module-roles.html">roles</a></li>
+                  <li><a href="module-scenarios.html">scenarios</a></li>
+                  <li><a href="module-sharedLibraries.html">sharedLibraries</a></li>
+                  <li><a href="module-shifts.html">shifts</a></li>
+                  <li><a href="module-sites.html">sites</a></li>
+                  <li><a href="module-subscriptionForms.html">subscriptionForms</a></li>
+                  <li><a href="module-subscriptions.html">subscriptions</a></li>
+                  <li><a href="module-sync.html">sync</a></li>
+                  <li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li>
+                  <li><a href="module-uploads.html">uploads</a></li>
+                  <li><a href="module-util.html">util</a></li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+        <div class="column is-9-desktop">
+          <div class="content" id="main-content-wrapper">
+            <header class="page-title">
+              <p>Source</p>
+              <h1>sync.js</h1>
+            </header>
 
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>const _ = require('lodash');
+            <section>
+              <article>
+                <pre class="prettyprint source linenums"><code>const _ = require('lodash');
 const xm = {
   audits: require('./audits'),
   dictionary: require('./dictionary'),
@@ -156,7 +194,7 @@ function DefaultSyncOptions() {
     syncDevices: false,
     devicesQuery: { embed: 'timeframes' },
     devicesFilter: undefined,
-    syncTimeframes: false,
+    timeframes: false,
 
     deviceNamesQuery: {},
 
@@ -180,28 +218,28 @@ function DefaultSyncOptions() {
 
     importJobsQuery: {},
 
-    syncIntegrations: false,
+    integrations: false,
     integrationsQuery: { embed: 'logs' },
     integrationsFilter: undefined,
 
     onCallQuery: { embed: 'members.owner,shift', membersPerShift: 100 },
 
-    syncPeople: false,
+    people: false,
     peopleQuery: { embed: 'roles' }, //possible to include ',devices' but simpler to extract devices separately.
     peopleFilter: undefined,
-    syncPersonSupervisors: false,
+    personSupervisors: false,
 
-    syncPlans: false,
+    plans: false,
     plansQuery: { embed: 'creator,constants,endpoints,forms,propertyDefinitions,integrations' },
     plansFilter: undefined,
 
-    syncPlanConstants: false,
+    planConstants: false,
     planConstantsFilter: undefined,
 
-    syncPlanEndpoints: false,
+    planEndpoints: false,
     planEndpointsFilter: undefined,
 
-    syncPlanProperties: false,
+    planProperties: false,
     planPropertiesFilter: undefined,
 
     rolesQuery: undefined,
@@ -228,7 +266,7 @@ function DefaultSyncOptions() {
 
     subscriptionFormsQuery: { embed: 'deviceNames,propertyDefinitions,roles' },
 
-    syncTemporaryAbsences: false,
+    temporaryAbsences: false,
     temporaryAbsencesQuery: {},
     temporaryAbsencesFilter: undefined
   };
@@ -404,21 +442,21 @@ async function DataToxMatters(sourceData, env, syncOptions = {}) {
 function GetExtractOptions(syncOptions, isDestination) {
   const {
     syncSites,
-    syncPeople,
-    syncPersonSupervisors,
+    people,
+    personSupervisors,
     syncDevices,
     syncGroups,
     syncShifts,
     syncGroupMembers,
     syncDynamicTeams,
     dynamicTeamsQuery,
-    syncTemporaryAbsences,
-    syncPlans,
+    temporaryAbsences,
+    plans,
     syncForms,
-    syncIntegrations,
-    syncPlanConstants,
-    syncPlanEndpoints,
-    syncPlanProperties,
+    integrations,
+    planConstants,
+    planEndpoints,
+    planProperties,
     syncScenarios,
     syncSharedLibraries,
     syncSubscriptions
@@ -429,19 +467,19 @@ function GetExtractOptions(syncOptions, isDestination) {
   if (syncSites) {
     get.sites = true;
   } else if (isDestination) {
-    if (syncPeople || syncGroups) {
+    if (people || syncGroups) {
       get.sites = true;
     }
   }
 
-  if (syncPeople) {
+  if (people) {
     get.people = true;
   } else if (isDestination) {
     if (syncGroups) {
       get.people = true;
     } else if (syncSubscriptions) {
       get.people = true;
-    } else if (syncTemporaryAbsences) {
+    } else if (temporaryAbsences) {
       get.people = true;
     } else if (syncScenarios) {
       get.people = true;
@@ -456,7 +494,7 @@ function GetExtractOptions(syncOptions, isDestination) {
 
   if (syncDevices) get.devices = true;
 
-  if (syncPersonSupervisors) {
+  if (personSupervisors) {
     //append supervisors to the person objects since supervisors can't be embedded from the request(2020-Jan-29)
     get.personSupervisors = true;
   }
@@ -475,30 +513,30 @@ function GetExtractOptions(syncOptions, isDestination) {
     get.shifts = true;
   }
 
-  if (syncForms || syncScenarios || syncIntegrations) get.forms = true;
+  if (syncForms || syncScenarios || integrations) get.forms = true;
 
   if (syncScenarios) get.scenarios = true;
 
-  if (syncTemporaryAbsences) get.temporaryAbsences = true;
+  if (temporaryAbsences) get.temporaryAbsences = true;
 
   if (
-    syncPlans ||
-    syncIntegrations ||
-    syncPlanConstants ||
-    syncPlanEndpoints ||
-    syncPlanProperties ||
+    plans ||
+    integrations ||
+    planConstants ||
+    planEndpoints ||
+    planProperties ||
     syncSubscriptions ||
     syncSharedLibraries
   )
     get.plans = true;
 
-  if (syncIntegrations) get.integrations = true;
+  if (integrations) get.integrations = true;
 
-  if (syncPlanConstants) get.planConstants = true;
+  if (planConstants) get.planConstants = true;
 
-  if (syncPlanEndpoints) get.planEndpoints = true;
+  if (planEndpoints) get.planEndpoints = true;
 
-  if (syncPlanProperties) get.planProperties = true;
+  if (planProperties) get.planProperties = true;
 
   if (syncSubscriptions) {
     get.subscriptions = true;
@@ -934,8 +972,8 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     sitesFilter,
     sitesTransform,
     sitesOptions,
-    syncPeople,
-    syncPersonSupervisors,
+    people,
+    personSupervisors,
     peopleFilter,
     peopleTransform,
     peopleOptions,
@@ -955,20 +993,20 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     dynamicTeamsFilter,
     dynamicTeamsTransform,
     dynamicTeamsOptions,
-    syncTemporaryAbsences,
+    temporaryAbsences,
     temporaryAbsencesFilter,
     temporaryAbsencesTransform,
     temporaryAbsencesOptions,
-    syncPlans,
+    plans,
     syncGroupMembers,
     groupMembersOptions,
     groupMembersFilter,
     groupMembersTransform,
-    syncPlanConstants,
-    syncPlanEndpoints,
-    syncPlanProperties,
+    planConstants,
+    planEndpoints,
+    planProperties,
     syncScenarios,
-    syncIntegrations,
+    integrations,
     integrationsTransform,
     integrationsFilter,
     integrationOptions,
@@ -999,7 +1037,7 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
 
   //remove supervisors from the sync fields for people so it doesn't trigger as needing update.
   let peopleFields = peopleOptions &amp;&amp; peopleOptions.fields ? peopleOptions.fields : xm.people.fields;
-  if (!syncPersonSupervisors) peopleFields = peopleFields.filter(e => e !== 'supervisors');
+  if (!personSupervisors) peopleFields = peopleFields.filter(e => e !== 'supervisors');
 
   const _sitesOptions = _.defaultsDeep(sitesOptions, { mirror, delayRemoval });
   const _peopleOptions = _.defaultsDeep(peopleOptions, { mirror, delayRemoval, fields: peopleFields });
@@ -1025,24 +1063,24 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
   //create ordered array of object types with supporting options.
   const objectNames = [
     [syncSites, 'sites', sitesFilter, sitesTransform, _sitesOptions],
-    [syncPeople, 'people', peopleFilter, peopleTransform, _peopleOptions],
+    [people, 'people', peopleFilter, peopleTransform, _peopleOptions],
     [syncDevices, 'devices', devicesFilter, devicesTransform, _devicesOptions],
     [syncGroups, 'groups', groupsFilter, groupsTransform, _groupsOptions],
     [syncShifts, 'shifts', shiftsFilter, shiftsTransform, _shiftsOptions],
     [syncGroupMembers, 'groupMembers', groupMembersFilter, groupMembersTransform, _groupMembersOptions],
     [syncDynamicTeams, 'dynamicTeams', dynamicTeamsFilter, dynamicTeamsTransform, _dynamicTeamsOptions],
     [
-      syncTemporaryAbsences,
+      temporaryAbsences,
       'temporaryAbsences',
       temporaryAbsencesFilter,
       temporaryAbsencesTransform,
       _temporaryAbsencesOptions
     ],
-    [syncPlans, 'plans', plansFilter, plansTransform, _plansOptions],
-    [syncPlanConstants, 'planConstants', planConstantsFilter, planConstantsTransform, _planConstantsOptions],
-    [syncPlanEndpoints, 'planEndpoints', planEndpointsFilter, planEndpointsTransform, _planEndpointsOptions],
+    [plans, 'plans', plansFilter, plansTransform, _plansOptions],
+    [planConstants, 'planConstants', planConstantsFilter, planConstantsTransform, _planConstantsOptions],
+    [planEndpoints, 'planEndpoints', planEndpointsFilter, planEndpointsTransform, _planEndpointsOptions],
     [
-      syncPlanProperties,
+      planProperties,
       'planProperties',
       planPropertiesFilter,
       planPropertiesTransform,
@@ -1055,7 +1093,7 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
       sharedLibrariesTransform,
       _sharedLibrariesOptions
     ],
-    [syncIntegrations, 'integrations', integrationsFilter, integrationsTransform, _integrationsOptions],
+    [integrations, 'integrations', integrationsFilter, integrationsTransform, _integrationsOptions],
     [syncScenarios, 'scenarios', scenariosFilter, scenariosTransform, _scenariosOptions],
     [syncSubscriptions, 'subscriptions', subscriptionsFilter, subscriptionsTransform, _subscriptionsOptions]
   ];
@@ -1125,20 +1163,14 @@ exports.UserUploadToImport = UserUploadToImport;
 exports.DefaultSyncOptions = DefaultSyncOptions;
 exports.DefaultExtractOptions = DefaultExtractOptions;
 </code></pre>
-        </article>
-    </section>
-
-
-
-
-                </div>
-            </div>
+              </article>
+            </section>
+          </div>
         </div>
+      </div>
     </div>
 
-
-
-<script src="scripts/app.min.js"></script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+    <script src="scripts/app.min.js"></script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
 </html>
