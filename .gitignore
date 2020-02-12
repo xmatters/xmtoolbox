@@ -1,7 +1,7 @@
-/data/
-/node_modules/
-/examples/
-/help/
+/data/*
+/node_modules/*
+/examples/*
+/help/*
 app.js
 .vscode
 .VSCodeCounter

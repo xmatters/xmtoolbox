@@ -1,1 +1,11 @@
 /docs
+/data/*
+/node_modules/*
+/examples/*
+/help/*
+app.js
+.vscode
+.VSCodeCounter
+.env
+test.js
+jsdoc.json
