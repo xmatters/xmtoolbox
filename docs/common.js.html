@@ -106,7 +106,7 @@ const rp = async function(options, log) {
       return await _rp(options);
     } catch (error) {
       //TODO Remove workaround for xmatters support #152468
-      if (error &amp;&amp; error.toString().indexOf('validation.scenario.scenario_not_exists_for')) {
+      if (error &amp;&amp; error.toString().indexOf('validation.scenario.scenario_not_exists_for') > -1) {
         return '{ "data": [] }';
       }
 
@@ -437,11 +437,15 @@ async function syncObject(
   const mirror = options.mirror || false;
   const delayRemoval = options.delayRemoval || true;
   const syncFields = Array.isArray(syncField) ? syncField : [syncField];
+  const deleteShiftsOnCreate = options.deleteShiftsOnCreate || false;
 
   const defaults = getNullDefaults(fields); //Create empty null object for synced fields to remove values from destination when not included in source.
 
   const pendingDelete = [];
   const deleted = [];
+  const created = [];
+  const updated = [];
+  const skipped = [];
   const synced = await Promise.all(
     sourceObjects.map(async sourceObject => {
       //for objects that require parent references. Pull off the id of the parent from the source object.
@@ -457,12 +461,12 @@ async function syncObject(
         const destObjectProps = _.pick(match, fields);
         if (_.isMatch(destObjectProps, sourceObjectProps)) {
           destination.log.info(`SYNC: Skip ${name} (match):`, match[syncFields[0]]);
-          return match;
+          return skipped.push(match);
         } else {
           const update = _.defaults(sourceObjectProps, defaults);
           destination.log.info(`SYNC: Update ${name}:`, match[syncFields[0]]);
           if (typeof updateFunction === 'function') {
-            return updateFunction(destination, update, match.id, parentId);
+            return updated.push(updateFunction(destination, update, match.id, parentId));
           } else {
             //if there is not an update function, delete then create to update
             destination.log.info(
@@ -471,14 +475,14 @@ async function syncObject(
               sourceObject.id
             );
             await deleteFunction(destination, match.id, parentId);
-            return createFunction(destination, update, parentId);
+            return created.push(createFunction(destination, update, parentId));
           }
         }
       } else {
         //if not match create object
         destination.log.info(`SYNC: Create ${name}:`, sourceObject[syncFields[0]]);
         omit(sourceObject, 'links');
-        return createFunction(destination, sourceObject, parentId);
+        return created.push(await createFunction(destination, sourceObject, parentId));
       }
     })
   );
@@ -504,7 +508,7 @@ async function syncObject(
       })
     );
   }
-  return { synced, remove: pendingDelete };
+  return { synced, remove: pendingDelete, created };
 }
 
 /**
