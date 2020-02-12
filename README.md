@@ -6,17 +6,13 @@ This package is a work in progress. Currently updating JSDocs to properly docume
 
 ## Simple To Use
 
-xmtoolbox is designed to simplify the interactions with xMatters APIs and includes other helper functions such as synchronization from a file and between xMatters instances.
+xmtoolbox is designed to simplify the interactions with the xMatters APIs and includes other helper functions for synchronizations from a file and between xMatters instances and for backup and restoration of xMatters data.
 
-```js
-const xm = require('../xmtoolbox');
-const prod = xm.environments.create('SUBDOMAIN', 'USER', 'PASSWORD');
+    //returns person with targetName jsmith
+    const jsmith = await xm.people.get(np, 'jsmith')
 
-GetPerson(prod, 'jsmith'); //person with jsmith username
-async function GetPerson(env, id) {
-  const person = await xm.people.get(env, id, { embed: 'devices' });
-}
-```
+    //gets group with group named MIM
+    const MIM = await xm.groups.get(np, 'MIM')
 
 ## Installation
 
@@ -40,6 +36,8 @@ async function GetPerson(env, id) {
 
 ## Examples
 
+Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start).
+
 ### REST API Examples
 
 #### Get User with Devices
@@ -60,6 +58,6 @@ The API documentation is available at [https://brannonvann.github.io/xmtoolbox/i
 ## Notes
 
 - Create Plan doesn't support loggingLevel but update does. For synchronizations this means there will be an update the second time the sync is run to update the loggingLevel if the logging level is different in the source than the default.
-- Creating and Updating xMatters Type endpoints in comm plans is not supported via API. They exist in every plan but require configuration in the UI to set the authenticating user.
+- Creating and Updating xMatters Type endpoints in communication plans is not supported via API. They exist in every plan but require configuration in the UI to set the authenticating user.
 - Syncing any communication plan related data such as the plans, forms, scenarios, plan properties, plan constants, plan endpoints, shared libraries, or integrations require that the rest user have edit access for the communication plan(s). One way to accomplish this is to add the Rest Web Services Role to each of the communication plans. The specific user can also be added rather than the entire role.
-- Form apis do not exist to allow the updating and deleting comm plan forms and therefore they cannot be synced. Scenarios depend on forms. If scenarios are synchronized the forms must be created independently of the sync with the same properties in the form layout.
+- Form APIs do not exist to allow the updating and deleting comm plan forms and therefore they cannot be synced. Scenarios depend on forms. If scenarios are synchronized the forms must be created independently of the sync with the same properties in the form layout.

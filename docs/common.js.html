@@ -105,6 +105,13 @@ const rp = async function(options, log) {
     try {
       return await _rp(options);
     } catch (error) {
+      //TODO Remove workaround for xmatters support #152468
+      if (error &amp;&amp; error.toString().indexOf('validation.scenario.scenario_not_exists_for')) {
+        return '{ "data": [] }';
+      }
+
+      console.log(error.toString());
+
       attempts++;
       const details = error.response &amp;&amp; error.response.body ? error.response.body : error;
       const level = attempts === 3 ? 'error' : 'warn';

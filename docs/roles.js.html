@@ -97,6 +97,8 @@
 async function getMany(env, query) {
   return common.getMany(env, `/api/xm/1/roles`, query, 'Roles');
 }
+
+exports.getMany = getMany;
 </code></pre>
         </article>
     </section>

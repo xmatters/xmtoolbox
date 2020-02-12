@@ -180,6 +180,54 @@ async function _delete(env, integrationId, planId) {
 }
 
 /**
+ * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Integration[]} integrations {@link https://help.xmatters.com/xmapi/index.html#integration-object}
+ * @param {xMattersObjects} destinationData The xMatters data for the destination.
+ * @returns {Promise}
+ */
+async function exportToImport(destination, integrations, destinationData) {
+  const destinationForms = (destinationData.all ? destinationData.all.forms : null) || destinationData.forms;
+  const destinationPlanEndpoints =
+    (destinationData.all ? destinationData.all.planEndpoints : null) || destinationData.planEndpoints;
+  return await integrations.map(integration => {
+    {
+      //set form
+      //form can be supplied as a string representing the name of the form or an object with name key.
+      const formName = integration.form.name;
+      integration.form = common.AssignParentObject(integration.form, destinationForms, 'name');
+
+      //if the formName was returned rather than the id.
+      if (formName === integration.form) {
+        destination.errors.push(
+          new Error(
+            `DATA INTEGRITY ISSUE: Integration [${integration.name}] has form [${formName}] but a form with that name was not found in the provided destination data.`
+          )
+        );
+      }
+
+      if (integration.endpoint) {
+        //if this has an endpoint, update the endpoint value with the id
+        //of the destination endpoint with the same plan and endpoint name.
+        integration.endpoint = common.AssignParentObject(
+          integration.endpoint,
+          destinationPlanEndpoints.filter(({ plan }) => plan.name === integration.plan.name),
+          'name'
+        );
+      }
+
+      //remove unnecessary fields that are not synced.
+      delete integration.originType;
+      delete integration.migratedOutboundTrigger;
+      delete integration.type;
+      delete integration.links;
+
+      return integration;
+    }
+  });
+}
+
+/**
  * The key values from the object that can be synchronized.
  */
 const fields = [
@@ -196,15 +244,38 @@ const fields = [
   'integrationService'
 ];
 
+/**
+ * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+ * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
+ * @param {Integration[]} sourceIntegrations  An array of the integration objects to synchronize from the source data.
+ * @param {Integration[]} destinationIntegrations An array of the integration objects to synchronize from the destination data.
+ * @param {Object} options
+ */
+async function sync(destination, sourceIntegrations, destinationIntegrations, options) {
+  return common.syncObject(
+    'Integration',
+    sourceIntegrations,
+    destinationIntegrations,
+    destination,
+    ['name', 'form'],
+    fields,
+    create,
+    update,
+    _delete,
+    options,
+    'form'
+  );
+}
+
 exports.get = get;
 exports.getMany = getMany;
 exports.getLogs = getLogs;
 exports.create = create;
 exports.update = update;
 exports.delete = _delete;
-//exports.exportToImport = exportToImport;
-//exports.fields = fields;
-//exports.sync = sync;
+exports.exportToImport = exportToImport;
+exports.fields = fields;
+exports.sync = sync;
 </code></pre>
         </article>
     </section>

@@ -327,7 +327,7 @@
         <p class="tag-source">
             <a href="integrations.js.html" class="button">View Source</a>
             <span>
-                <a href="integrations.js.html">integrations.js</a>, <a href="integrations.js.html#line107">line 107</a>
+                <a href="integrations.js.html">integrations.js</a>, <a href="integrations.js.html#line155">line 155</a>
             </span>
         </p>
     
@@ -563,6 +563,232 @@
         <label>Type: </label>
         
 <span class="param-type">Promise.&lt;Integration></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~exportToImport">
+        <a class="href-link" href="#~exportToImport">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                exportToImport<span class="signature">(destination, integrations, destinationData)</span><span class="type-signature"> &rarr; {Promise}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destination</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of the target or destination xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>integrations</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Integration></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><a href="https://help.xmatters.com/xmapi/index.html#integration-object">https://help.xmatters.com/xmapi/index.html#integration-object</a></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destinationData</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">xMattersObjects</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xMatters data for the destination.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="integrations.js.html" class="button">View Source</a>
+            <span>
+                <a href="integrations.js.html">integrations.js</a>, <a href="integrations.js.html#line111">line 111</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise</span>
 
 
     </div>
@@ -1262,6 +1488,234 @@
                 
         </div>
     </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~sync">
+        <a class="href-link" href="#~sync">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                sync<span class="signature">(destination, sourceIntegrations, destinationIntegrations, options)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destination</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of the target or destination xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sourceIntegrations</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Integration></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">An array of the integration objects to synchronize from the source data.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destinationIntegrations</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;Integration></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">An array of the integration objects to synchronize from the destination data.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="integrations.js.html" class="button">View Source</a>
+            <span>
+                <a href="integrations.js.html">integrations.js</a>, <a href="integrations.js.html#line176">line 176</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

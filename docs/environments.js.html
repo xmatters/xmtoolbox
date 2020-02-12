@@ -149,7 +149,7 @@
  */
 function create(subdomain, user, pass, options = {}) {
   const limiter = new Bottleneck({
-    maxConcurrent: 25
+    maxConcurrent: process.env.MAX_CONCURRENT_CONNECTIONS || 10
   });
   const auth = { user, pass };
   const baseUrl = `https://${subdomain}.xmatters.com`;
