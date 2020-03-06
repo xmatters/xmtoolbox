@@ -38,4 +38,4 @@ exports.subscriptions = require('./lib/subscriptions');
 exports.sync = require('./lib/sync');
 exports.temporaryAbsences = require('./lib/temporaryAbsences');
 exports.uploads = require('./lib/uploads');
-//exports.common = require('./lib/common');
+exports.util = require('./lib/util');

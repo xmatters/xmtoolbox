@@ -1,8 +1,11 @@
 # xmtoolbox
 
-<aside class="notice">
-This package is a work in progress. Currently updating JSDocs to properly document functions and adding sync module functionality.
-</aside>
+xmtoolbox is a promise based node package to simplify the interaction with xMatters using the REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
+
+Please have a look at the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start) for a full working node app.
+
+<!-- <aside class="notice">
+</aside> -->
 
 ## Simple To Use
 
@@ -55,7 +58,7 @@ Full working examples are available in the [xmtoolbox-quick-start template](http
 
 The API documentation is available at [https://brannonvann.github.io/xmtoolbox/index.html](https://brannonvann.github.io/xmtoolbox/index.html).
 
-## Notes
+## Odds and Ends
 
 - Create Plan doesn't support loggingLevel but update does. For synchronizations this means there will be an update the second time the sync is run to update the loggingLevel if the logging level is different in the source than the default.
 - Creating and Updating xMatters Type endpoints in communication plans is not supported via API. They exist in every plan but require configuration in the UI to set the authenticating user.
