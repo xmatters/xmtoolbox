@@ -189,7 +189,7 @@ async function exportToImport(destination, scenarios, destinationData) {
             if (person.targetName === destinationPerson) {
               destination.errors.push(
                 new Error(
-                  `DATA INTEGRITY ISSUE: Scenario [${scenario.name}] on form [${scenario.form.name}] person mapping failed for permitted property. Person with targetName [${person.targetName}] was not found in the provided destination data.`
+                  `DATA INTEGRITY ISSUE: Scenario [${scenario.name}] on form [${formName}] person mapping failed for permitted property. Person with targetName [${person.targetName}] was not found in the provided destination data.`
                 )
               );
             }
@@ -233,7 +233,14 @@ const fields = [
   'bypassPhoneIntro',
   'escalationOverride',
   'expirationInMinutes',
-  'overrideDeviceRestrictions'
+  'overrideDeviceRestrictions',
+  'requirePhonePassword',
+  'senderOverrides',
+  'voicemailOptions',
+  'targetDeviceNames',
+  'properties',
+  'permitted',
+  'recipients'
 ];
 
 /**

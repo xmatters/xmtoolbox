@@ -155,6 +155,7 @@ function create(subdomain, user, pass, options = {}) {
   const baseUrl = `https://${subdomain}.xmatters.com`;
 
   const logLevel = options.logLevel || 'error';
+  const readOnly = options.readOnly || false;
   const errors = [];
 
   function logErrors() {
@@ -172,10 +173,15 @@ function create(subdomain, user, pass, options = {}) {
     error: logIndex >= 1 ? console.error : () => {},
     warn: logIndex >= 2 ? console.warn : () => {},
     info: logIndex >= 3 ? console.info : () => {},
-    log: logIndex >= 4 ? console.log : () => {}
+    time: logIndex >= 3 ? console.time : () => {},
+    timeEnd: logIndex >= 3 ? console.timeEnd : () => {},
+    log: logIndex >= 4 ? console.log : () => {},
+    debug: logIndex >= 4 ? console.log : () => {}
   };
 
-  return { subdomain, auth, baseUrl, limiter, log, errors, logErrors };
+  if (readOnly) log.info('Environment', subdomain, 'Read-Only Mode');
+
+  return { subdomain, auth, baseUrl, limiter, log, errors, logErrors, readOnly };
 }
 
 exports.create = create;

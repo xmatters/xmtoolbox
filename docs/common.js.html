@@ -110,8 +110,6 @@ const rp = async function(options, log) {
         return '{ "data": [] }';
       }
 
-      console.log(error.toString());
-
       attempts++;
       const details = error.response &amp;&amp; error.response.body ? error.response.body : error;
       const level = attempts === 3 ? 'error' : 'warn';
@@ -192,9 +190,9 @@ function requestList(total, auth, uri, method = 'GET', json = null, pageSize = 1
 async function get({ baseUrl, limiter, auth, subdomain, log }, api, id, query = {}, label = '') {
   const uri = `${baseUrl}${api}${encodeURI(id)}?${queryString(query)}`;
   const options = { method: 'GET', uri, auth };
-  log.info('XMAPI:', subdomain, label, 'Get', id);
-  const body = await limiter.schedule(rp, options, log);
-  log.info('XMAPI:', subdomain, label, 'Got', id);
+  log.debug('XMAPI:', subdomain, label, 'Get', id);
+  const body = await limitControl(limiter, rp, options, log);
+  log.debug('XMAPI:', subdomain, label, 'Got', id);
 
   return JSON.parse(body);
 }
@@ -211,11 +209,11 @@ async function get({ baseUrl, limiter, auth, subdomain, log }, api, id, query = 
 async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = {}, label = '') {
   let uri = `${baseUrl}${api}?${queryString(query)}`;
   const label2 = query ? JSON.stringify(query) : '';
-  log.info('XMAPI:', subdomain, label, 'Get Many', label2);
+  log.debug('XMAPI:', subdomain, label, 'Get Many', label2);
 
   const options = { method: 'GET', uri, auth };
 
-  const response = await limiter.schedule(rp, options, log);
+  const response = await limitControl(limiter, rp, options, log);
 
   //TODO: REMOVE THIS WORKAROUND FOR SCENARIOS: https://xmexternal.zendesk.com/agent/tickets/152468
   if (!response) {
@@ -229,13 +227,12 @@ async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = 
 
   await Promise.all(
     queue.map(async function(options) {
-      console.log(options.uri);
-      const { data } = JSON.parse(await limiter.schedule(rp, options, log));
+      const { data } = JSON.parse(await limitControl(limiter, rp, options, log));
       list = list.concat(data);
     })
   );
 
-  log.info('XMAPI:', subdomain, label, `Got Many (${list.length})`, label2);
+  log.debug('XMAPI:', subdomain, label, `Got Many (${list.length})`, label2);
   return list;
 }
 
@@ -248,18 +245,24 @@ async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = 
  * @param {boolean} dropId Whether or not to drop the id key in the request. If true the id key is deleted before the request is made.
  * @returns {Object} Body from from create request response
  */
-async function create({ baseUrl, limiter, auth, subdomain, log }, api, json, label = '', dropId = false) {
+async function create(
+  { baseUrl, limiter, auth, subdomain, log, readOnly },
+  api,
+  json,
+  label = '',
+  dropId = false
+) {
   const name = json.targetName || json.name || '';
   const uri = `${baseUrl}${api}`;
   if (dropId) {
     delete json.id;
   }
   const options = { method: 'POST', uri, auth, json };
-  log.info('XMAPI:', subdomain, label, 'Create', name);
+  log.debug('XMAPI:', subdomain, label, 'Create', name);
 
-  const body = await limiter.schedule(rp, options, log);
+  const body = readOnly ? json : await limitControl(limiter, rp, options, log);
   const id = body &amp;&amp; body.id ? body.id : '';
-  log.info('XMAPI:', subdomain, label, 'Created', name, 'id:', id);
+  log.debug('XMAPI:', subdomain, label, 'Created', name, 'id:', id);
   return body;
 }
 
@@ -272,12 +275,12 @@ async function create({ baseUrl, limiter, auth, subdomain, log }, api, json, lab
  * @returns {Object} Body from from delete request response
  * @name delete
  */
-async function _delete({ baseUrl, limiter, auth, subdomain, log }, api, id, label = '') {
+async function _delete({ baseUrl, limiter, auth, subdomain, log, readOnly }, api, id, label = '') {
   const uri = `${baseUrl}${api}${id}`;
   const options = { method: 'DELETE', uri, auth };
-  log.info('XMAPI:', subdomain, label, 'Delete', 'id:', id);
-  const body = await limiter.schedule(rp, options, log);
-  log.info('XMAPI:', subdomain, label, 'Deleted', 'id:', id);
+  log.debug('XMAPI:', subdomain, label, 'Delete', 'id:', id);
+  const body = readOnly ? json : await limitControl(limiter, rp, options, log);
+  log.debug('XMAPI:', subdomain, label, 'Deleted', 'id:', id);
   return body;
 }
 
@@ -290,14 +293,14 @@ async function _delete({ baseUrl, limiter, auth, subdomain, log }, api, id, labe
  * @param {string} label The Label to define what type of object or objects are being acted on with this request. Primarily used for logging.
  * @returns {Object} Body from from update request response
  */
-async function update({ baseUrl, limiter, auth, subdomain, log }, api, json, id, label = '') {
+async function update({ baseUrl, limiter, auth, subdomain, log, readOnly }, api, json, id, label = '') {
   const name = json.targetName || json.name || '';
   const uri = `${baseUrl}${api}`;
   json.id = id;
   const options = { method: 'POST', uri, auth, json };
-  log.info('XMAPI:', subdomain, label, 'Update', name, 'id:', id);
-  const body = await limiter.schedule(rp, options, log);
-  log.info('XMAPI:', subdomain, label, 'Updated', name, 'id:', id);
+  log.debug('XMAPI:', subdomain, label, 'Update', name, 'id:', id);
+  const body = readOnly ? json : await limitControl(limiter, rp, options, log);
+  log.debug('XMAPI:', subdomain, label, 'Updated', name, 'id:', id);
   return body;
 }
 
@@ -314,9 +317,9 @@ async function upload({ baseUrl, limiter, auth, subdomain, log }, api, formData,
   const uri = `${baseUrl}${api}`;
   const headers = { 'Content-Type': 'multipart/form-data' };
   const options = { method: 'POST', uri, auth, formData, headers };
-  log.info('XMAPI:', subdomain, label, 'Upload', name);
-  const body = await limiter.schedule(rp, options, log);
-  log.info('XMAPI:', subdomain, label, 'Upload', name);
+  log.debug('XMAPI:', subdomain, label, 'Upload', name);
+  const body = readOnly ? formData : await limitControl(limiter, rp, options, log);
+  log.debug('XMAPI:', subdomain, label, 'Upload', name);
   return body;
 }
 
@@ -330,13 +333,37 @@ async function upload({ baseUrl, limiter, auth, subdomain, log }, api, formData,
  * @returns {Object} Body from from create request response
  */
 async function request({ baseUrl, limiter, auth, subdomain, log }, api, query, options, label = '') {
-  let uri = `${baseUrl}${api}?${queryString(query)}`;
+  let uri = `${baseUrl}${api.replace(baseUrl, '')}?${queryString(query)}`;
   options.uri = uri;
   options.auth = auth;
-  log.info('XMAPI:', subdomain, label, options.method);
-  const body = await limiter.schedule(rp, options, log);
-  log.info('XMAPI:', subdomain, label, options.method);
+  log.debug('XMAPI:', subdomain, label, options.method);
+  const body = await limitControl(limiter, rp, options, log);
+  log.debug('XMAPI:', subdomain, label, options.method);
   return body;
+}
+
+async function limitControl(limiter, rp, options, log) {
+  options.transform = (body, response) => {
+    return { headers: response.headers, data: body };
+  };
+
+  const response = await limiter.schedule(rp, options, log);
+
+  /*  if (response.headers.x - concurrentlimit - limit) {
+    limiter.set;
+  } */
+
+  /*
+    x-concurrentlimit-limit:"10000"
+    x-concurrentlimit-used:"1"
+    x-ratelimit-limit:"60000"
+    x-ratelimit-period_in_sec:"60"
+    x-ratelimit-used:"1"
+ */
+
+  //set new limit if exceeded.
+
+  return response.data;
 }
 
 /**
@@ -437,7 +464,6 @@ async function syncObject(
   const mirror = options.mirror || false;
   const delayRemoval = options.delayRemoval || true;
   const syncFields = Array.isArray(syncField) ? syncField : [syncField];
-  const deleteShiftsOnCreate = options.deleteShiftsOnCreate || false;
 
   const defaults = getNullDefaults(fields); //Create empty null object for synced fields to remove values from destination when not included in source.
 
@@ -445,7 +471,7 @@ async function syncObject(
   const deleted = [];
   const created = [];
   const updated = [];
-  const skipped = [];
+  const matched = [];
   const synced = await Promise.all(
     sourceObjects.map(async sourceObject => {
       //for objects that require parent references. Pull off the id of the parent from the source object.
@@ -461,12 +487,14 @@ async function syncObject(
         const destObjectProps = _.pick(match, fields);
         if (_.isMatch(destObjectProps, sourceObjectProps)) {
           destination.log.info(`SYNC: Skip ${name} (match):`, match[syncFields[0]]);
-          return skipped.push(match);
+          matched.push(match);
+          return;
         } else {
           const update = _.defaults(sourceObjectProps, defaults);
           destination.log.info(`SYNC: Update ${name}:`, match[syncFields[0]]);
           if (typeof updateFunction === 'function') {
-            return updated.push(updateFunction(destination, update, match.id, parentId));
+            updated.push(await updateFunction(destination, update, match.id, parentId));
+            return;
           } else {
             //if there is not an update function, delete then create to update
             destination.log.info(
@@ -474,15 +502,21 @@ async function syncObject(
               sourceObject[syncFields[0]],
               sourceObject.id
             );
+
             await deleteFunction(destination, match.id, parentId);
-            return created.push(createFunction(destination, update, parentId));
+            updated.push(await createFunction(destination, update, parentId));
+
+            return;
           }
         }
       } else {
         //if not match create object
         destination.log.info(`SYNC: Create ${name}:`, sourceObject[syncFields[0]]);
         omit(sourceObject, 'links');
-        return created.push(await createFunction(destination, sourceObject, parentId));
+
+        created.push(await createFunction(destination, sourceObject, parentId));
+
+        return;
       }
     })
   );
@@ -502,13 +536,14 @@ async function syncObject(
             pendingDelete.push(destinationObject);
           } else if (typeof deleteFunction === 'function') {
             const parentId = destinationObject[parentKey];
+
             deleted.push(await deleteFunction(destination, destinationObject.id, parentId));
           }
         }
       })
     );
   }
-  return { synced, remove: pendingDelete, created };
+  return { synced, remove: pendingDelete, created, updated, deleted, matched };
 }
 
 /**
