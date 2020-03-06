@@ -91,7 +91,7 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
 
         (async () => {
             const data = await xm.sync.ExtractData(np, extractOptions);
-            await require('fs').writeFile(path, JSON.stringify(data, null, 2));
+            require('fs').writeFileSync(path, JSON.stringify(data, null, 2));
         })();
 
 ### Restore People and Devices from File to xMatters
@@ -106,7 +106,7 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
         const path = `./data/${np.subdomain}.people.json`;
 
         (async () => {
-            const text = await require('fs').readFile(path, 'utf8');
+            const text = require('fs').readFileSync(path, 'utf8');
             await xm.sync.DataToxMatters(JSON.parse(text), np, syncOptions);
         })();
 
