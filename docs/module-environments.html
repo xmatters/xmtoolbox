@@ -394,7 +394,7 @@ Password needs to be an xMatters password. No SSO/SAML passwords.</td>
         <p class="tag-source">
             <a href="environments.js.html" class="button">View Source</a>
             <span>
-                <a href="environments.js.html">environments.js</a>, <a href="environments.js.html#line72">line 72</a>
+                <a href="environments.js.html">environments.js</a>, <a href="environments.js.html#line81">line 81</a>
             </span>
         </p>
     
@@ -514,8 +514,8 @@ Password needs to be an xMatters password. No SSO/SAML passwords.</td>
 
     
 
-    <td class="description last">The level of logging to output for this environment.
-
+    <td class="description last">The level of logging to output for this environment.<br>
+<br>
 Default 'error'<br><br>
 Set to one of:<br>
 - 'silent': No console logging<br>
@@ -523,6 +523,35 @@ Set to one of:<br>
 - 'warn': Errors and warnings.<br>
 - 'info': Errors, warnings, and information.<br>
 - 'debug': All console messages.<br></td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>readOnly</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+
+    
+
+    <td class="description last">Whether or not writes and deletes are allowed in this environment.<br>
+<br>
+Default: false<br><br>
+Note: util.post() does not abide by this option.<br>
+Set to one of:<br><br>
+- true: Deleting, Updating, and Creating data in xMatters is skipped. returns the intended object as if it was from xMatters.<br>
+- false: All operations are allowed in the xMatters instance.<br></td>
 </tr>
 
     
@@ -556,6 +585,11 @@ Set to one of:<br>
 
     
 
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>{logLevel: 'error', readOnly: false}</li>
+        </ul></dd>
     
     
 

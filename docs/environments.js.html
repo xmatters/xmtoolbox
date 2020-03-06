@@ -115,8 +115,8 @@
 
 /**
  * @typedef module:environments.EnvironmentOptions
- * @property {string} logLevel The level of logging to output for this environment.
- *
+ * @property {string} logLevel The level of logging to output for this environment.&lt;br>
+ *&lt;br>
  * Default 'error'&lt;br>&lt;br>
  * Set to one of:&lt;br>
  * - 'silent': No console logging&lt;br>
@@ -124,6 +124,15 @@
  * - 'warn': Errors and warnings.&lt;br>
  * - 'info': Errors, warnings, and information.&lt;br>
  * - 'debug': All console messages.&lt;br>
+ *
+ * @property {boolean} readOnly Whether or not writes and deletes are allowed in this environment.&lt;br>
+ *&lt;br>
+ * Default: false&lt;br>&lt;br>
+ * Note: util.post() does not abide by this option.&lt;br>
+ * Set to one of:&lt;br>&lt;br>
+ * - true: Deleting, Updating, and Creating data in xMatters is skipped. returns the intended object as if it was from xMatters.&lt;br>
+ * - false: All operations are allowed in the xMatters instance.&lt;br>
+ * @default {logLevel: 'error', readOnly: false}
  */
 
 /**

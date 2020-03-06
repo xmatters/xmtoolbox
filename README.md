@@ -4,12 +4,13 @@ xmtoolbox is a promise based node package to simplify the interaction with xMatt
 
 Please have a look at the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start) for a full working node app.
 
-<!-- <aside class="notice">
-</aside> -->
+<aside class="notice">
+This library is currently in development. All is expected to function as intended and may be leveraged to make some great things. Please report any issues to: https://github.com/brannonvann/xmtoolbox/issues Although not likely, the structure of the module may be adjusted without backward support and without major version bumps. If this occurs and you need help, please report it as an issue.
+</aside>
 
 ## Simple To Use
 
-xmtoolbox is designed to simplify the interactions with the xMatters APIs and includes other helper functions for synchronizations from a file and between xMatters instances and for backup and restoration of xMatters data.
+xmtoolbox is designed to simplify the interactions with the xMatters APIs and includes other helper functions for synchronizations from a file and between xMatters instances for backup and restoration of xMatters data.
 
     //returns person with targetName jsmith
     const jsmith = await xm.people.get(np, 'jsmith')
@@ -19,7 +20,7 @@ xmtoolbox is designed to simplify the interactions with the xMatters APIs and in
 
 ## Installation
 
-        npm install xmtoolbox
+        npm install xmtoolbox --save
 
 ## Setup
 
@@ -33,26 +34,82 @@ xmtoolbox is designed to simplify the interactions with the xMatters APIs and in
         const SUBDOMAIN = process.env.SUBDOMAIN; // https://SUBDOMAIN.xmatters.com
         const USERNAME = process.env.USERNAME;
         const PASSWORD = process.env.PASSWORD;
-        const options = {logLevel: 'debug'};
 
-        const prod = xm.environments.create(SUBDOMAIN, USERNAME, PASSWORD, options);
+        //options doc: https://brannonvann.github.io/xmtoolbox/module-environments.html#.EnvironmentOptions
+        const options = {logLevel: 'debug', readOnly: false};  
+
+        //create non-production xMatters environment
+        const np = xm.environments.create(SUBDOMAIN, USERNAME, PASSWORD, options);
+
+## Warning
+
+This package has the ability to modify data within your xMatters for good and bad. Please use it responsibly. Test in non-production and don't make unnecessary requests against your xMatters instance. Also be aware that according to xMatters, the inbound events and flow posts share the same bandwidth any interactions with the xMatters APIs, including the ones this package uses, so again please use responsibly.
 
 ## Examples
 
 Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start).
 
-### REST API Examples
+To improve readability, `xm` is a reference to this package. `np` and `prod` in the below examples are environments that are assumed to exist as explained in [setup](#setup). Only the `np` (non-production) is included in the setup as an example but depending on your goals you may need to operate with two or more xMatters instances and will need to create them as needed.
 
-#### Get User with Devices
 
-        const person = await xm.people.get(prod, 'amunster', { embed: 'devices' });
+### Get User with Devices
+
+        const person = await xm.people.get(np, 'amunster', { embed: 'devices' });
         console.log(person.firstName); //Arnold
 
-#### Get Users with Devices and Roles
+### Get Users with Devices and Roles
 
         // matches weblogin and email for @example.com
         const query = { embed: 'roles,devices', search: '@example.com' };
-        const people = await xm.people.getMany(prod, query);
+        const people = await xm.people.getMany(np, query);
+
+
+### Migrate groups, people, and devices from production to non-production xMatters
+
+        const syncOptions = {
+            people: true,
+            peopleFilter: p => p.targetName.startsWith('U001'), //Optional
+            devices: true,
+            groups: true,
+            shifts: true
+        };
+
+        (async () => {
+            await xm.sync.xMattersToxMatters(prod, np, syncOptions);
+        })();
+
+### Backup People and Devices from xMatters to a file
+
+        const extractOptions = {
+            people: true,
+            devices: true
+            //groups: true, // include groups 
+            //shifts: true // and shifts too! 
+        }
+
+        const path = `./data/${np.subdomain}.people.json`;
+
+        (async () => {
+            const data = await xm.sync.ExtractData(np, extractOptions);
+            await require('fs').writeFile(path, JSON.stringify(data, null, 2));
+        })();
+
+### Restore People and Devices from File to xMatters
+
+        const syncOptions = {
+            people: true,
+            devices: true,
+            //groups: true, // include groups 
+            //shifts: true // and shifts too! 
+        };
+
+        const path = `./data/${np.subdomain}.people.json`;
+
+        (async () => {
+            const text = await require('fs').readFile(path, 'utf8');
+            await xm.sync.DataToxMatters(JSON.parse(text), np, syncOptions);
+        })();
+
 
 ## API
 
