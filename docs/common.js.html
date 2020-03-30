@@ -279,7 +279,7 @@ async function _delete({ baseUrl, limiter, auth, subdomain, log, readOnly }, api
   const uri = `${baseUrl}${api}${id}`;
   const options = { method: 'DELETE', uri, auth };
   log.debug('XMAPI:', subdomain, label, 'Delete', 'id:', id);
-  const body = readOnly ? json : await limitControl(limiter, rp, options, log);
+  const body = readOnly ? id : await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, 'Deleted', 'id:', id);
   return body;
 }
