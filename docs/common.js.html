@@ -93,7 +93,7 @@ process.env.UV_THREADPOOL_SIZE = 128; //https://stackoverflow.com/questions/2432
  * @param {Object} log Log object with log, error, warn, and info functions.
  * @returns {Promise&lt;Object>} Promise of the request or nothing if error.
  */
-const rp = async function(options, log) {
+const rp = async function (options, log) {
   const retries = options.retries || 3;
   const retryDelay = options.retryDelay || 2000;
   const errorAfterRetries = options.errorAfterRetries || false;
@@ -116,9 +116,9 @@ const rp = async function(options, log) {
       log[level](
         `attempt: ${attempts}`,
         'Response',
-        JSON.stringify(details, null, 2),
+        JSON.stringify(details, null, 2).replace(options.auth.pass, 'PASSWORD_EXCLUDED'),
         'Request',
-        JSON.stringify(_.omit(error.options, 'auth'), null, 2)
+        JSON.stringify(error.options, null, 2).replace(options.auth.pass, 'PASSWORD_EXCLUDED')
       );
       await sleep(retryDelay);
       if (attempts >= retries &amp;&amp; errorAfterRetries) throw error;
@@ -226,7 +226,7 @@ async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = 
   const queue = requestList(resBody.total, auth, uri); //queue request for records > 100
 
   await Promise.all(
-    queue.map(async function(options) {
+    queue.map(async function (options) {
       const { data } = JSON.parse(await limitControl(limiter, rp, options, log));
       list = list.concat(data);
     })
@@ -581,7 +581,7 @@ function AssignParentObject(childsParent, destinationParents, matchField) {
 function getNullDefaults(fields) {
   return _(fields)
     .mapKeys()
-    .mapValues(function() {
+    .mapValues(function () {
       return null;
     })
     .value();

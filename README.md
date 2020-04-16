@@ -1,11 +1,11 @@
 # xmtoolbox
 
-xmtoolbox is a promise based node package to simplify the interaction with xMatters using the REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
+The xmtoolbox is a promise based node package to simplify the interaction with xMatters using the REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
 
 Please have a look at the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start) for a full working node app.
 
 <aside class="notice">
-This library is currently in development. All is expected to function as intended and may be leveraged to make some great things. Please report any issues to: https://github.com/brannonvann/xmtoolbox/issues Although not likely, the structure of the module may be adjusted without backward support and without major version bumps. If this occurs and you need help, please report it as an issue.
+This library is currently in development. Please report any issues to: https://github.com/brannonvann/xmtoolbox/issues 
 </aside>
 
 ## Simple To Use
@@ -20,7 +20,7 @@ xmtoolbox is designed to simplify the interactions with the xMatters APIs and in
 
 ## Installation
 
-        npm install xmtoolbox --save
+    npm install xmtoolbox --save
 
 ## Setup
 
@@ -36,21 +36,20 @@ xmtoolbox is designed to simplify the interactions with the xMatters APIs and in
         const PASSWORD = process.env.PASSWORD;
 
         //options doc: https://brannonvann.github.io/xmtoolbox/module-environments.html#.EnvironmentOptions
-        const options = {logLevel: 'debug', readOnly: false};  
+        const options = {logLevel: 'debug', readOnly: false};
 
         //create non-production xMatters environment
         const np = xm.environments.create(SUBDOMAIN, USERNAME, PASSWORD, options);
 
 ## Warning
 
-This package has the ability to modify data within your xMatters for good and bad. Please use it responsibly. Test in non-production and don't make unnecessary requests against your xMatters instance. Also be aware that according to xMatters, the inbound events and flow posts share the same bandwidth any interactions with the xMatters APIs, including the ones this package uses, so again please use responsibly.
+This package has the ability to modify data within xMatters for good and bad. Please use it responsibly. Test in non-production and don't make unnecessary requests against your xMatters instance. Also, be aware that according to xMatters, the inbound events and flow posts share the same bandwidth any interactions with the xMatters APIs, including the ones this package uses, so again please use responsibly.
 
 ## Examples
 
 Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start).
 
 To improve readability, `xm` is a reference to this package. `np` and `prod` in the below examples are environments that are assumed to exist as explained in [setup](#setup). Only the `np` (non-production) is included in the setup as an example but depending on your goals you may need to operate with two or more xMatters instances and will need to create them as needed.
-
 
 ### Get User with Devices
 
@@ -62,7 +61,6 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
         // matches weblogin and email for @example.com
         const query = { embed: 'roles,devices', search: '@example.com' };
         const people = await xm.people.getMany(np, query);
-
 
 ### Migrate groups, people, and devices from production to non-production xMatters
 
@@ -83,8 +81,8 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
         const extractOptions = {
             people: true,
             devices: true
-            //groups: true, // include groups 
-            //shifts: true // and shifts too! 
+            //groups: true, // include groups
+            //shifts: true // and shifts too!
         }
 
         const path = `./data/${np.subdomain}.people.json`;
@@ -99,8 +97,8 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
         const syncOptions = {
             people: true,
             devices: true,
-            //groups: true, // include groups 
-            //shifts: true // and shifts too! 
+            //groups: true, // include groups
+            //shifts: true // and shifts too!
         };
 
         const path = `./data/${np.subdomain}.people.json`;
@@ -110,10 +108,65 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
             await xm.sync.DataToxMatters(JSON.parse(text), np, syncOptions);
         })();
 
-
 ## API
 
 The API documentation is available at [https://brannonvann.github.io/xmtoolbox/index.html](https://brannonvann.github.io/xmtoolbox/index.html).
+
+## Supported Data
+
+This lists below refer to xMatters objects as defined in the xMatters REST API documentation.
+
+### Can be obtained from xMatters
+
+- Audits
+- Devices
+- Device Names
+- Device Types
+- Dynamic Teams
+- Events
+- Event Suppressions
+- Forms
+- Groups
+- Group Roster
+- Import Jobs
+- Integrations
+- On-Call
+- People
+- Plans (Workflows)
+- Plan Constants
+- Plan Endpoints
+- Plan Properties
+- Roles
+- Scenarios
+- Shared Libraries
+- Shifts
+- Sites
+- Subscription Forms
+- Subscriptions
+- Temporary Absences
+
+### Can be created, updated, or deleted in xMatters
+
+Object as defined by xMatters (caveats)
+
+- Devices
+- Dynamic Teams
+- Groups
+- Group Roster
+- Integrations
+- People
+- Plans (Workflows)
+- Plan Constants
+- Plan Endpoints
+- Plan Properties (delete not available)
+- Roles
+- Scenarios (delete not available)
+- Shared Libraries
+- Shifts
+- Sites
+- Subscriptions (Subscription forms need to be manually created)
+- Temporary Absences (These generate notifications when created)
+- Workflow HTTP Trigger
 
 ## Odds and Ends
 
