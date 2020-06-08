@@ -172,7 +172,7 @@ function requestList(total, auth, uri, method = 'GET', json = null, pageSize = 1
       method,
       json,
       uri: uri + `&amp;offset=${i}`,
-      auth
+      auth,
     });
   }
   return queue;
@@ -363,6 +363,11 @@ async function limitControl(limiter, rp, options, log) {
 
   //set new limit if exceeded.
 
+  if (!response)
+    throw new Error(
+      `The response from xMatters was invalid after multiple attempts. Pleae review the output above for more details. Related request: ${options.method} ${options.uri}`
+    );
+
   return response.data;
 }
 
@@ -466,6 +471,7 @@ async function syncObject(
   const syncFields = Array.isArray(syncField) ? syncField : [syncField];
 
   const defaults = getNullDefaults(fields); //Create empty null object for synced fields to remove values from destination when not included in source.
+  //const defaults = _.defaultsDeep(options.defaults, getNullDefaults(fields)); //Create empty null object for synced fields to remove values from destination when not included in source.
 
   const pendingDelete = [];
   const deleted = [];

@@ -103,7 +103,7 @@ const xm = {
   sites: require('./sites'),
   subscriptionForms: require('./subscriptionForms'),
   subscriptions: require('./subscriptions'),
-  temporaryAbsences: require('./temporaryAbsences')
+  temporaryAbsences: require('./temporaryAbsences'),
 };
 
 /**
@@ -169,7 +169,7 @@ function DefaultExtractOptions() {
     sites: false,
     subscriptionForms: false,
     subscriptions: false,
-    temporaryAbsences: false
+    temporaryAbsences: false,
   };
 }
 
@@ -361,7 +361,7 @@ function DefaultSyncOptions() {
 
     temporaryAbsences: false,
     temporaryAbsencesQuery: {},
-    temporaryAbsencesFilter: undefined
+    temporaryAbsencesFilter: undefined,
   };
 }
 
@@ -375,7 +375,7 @@ async function UserUploadToImport(json, env) {
   const results = {
     people: [],
     devices: [],
-    remove: []
+    remove: [],
   };
 
   const deviceNames = await xm.deviceNames.getMany(env);
@@ -394,7 +394,7 @@ async function UserUploadToImport(json, env) {
     'Time Zone',
     'User',
     'User Supervisor',
-    'UUID'
+    'UUID',
   ];
 
   for (let i = 0; i &lt; deviceNames.length; i++) {
@@ -430,7 +430,7 @@ async function UserUploadToImport(json, env) {
               deviceType: deviceName.deviceType,
               name: key,
               owner: row.User,
-              targetName: `${row.User}|${key}`
+              targetName: `${row.User}|${key}`,
             };
 
             switch (device.deviceType) {
@@ -468,7 +468,7 @@ async function UserUploadToImport(json, env) {
  * @param {module:environments.xMattersEnvironment} sourceEnv The xmtoolbox representation of the source xMatters instance.
  * @param {module:environments.xMattersEnvironment} destinationEnv The xmtoolbox representation of the destination xMatters instance.
  * @param {SyncOptions} syncOptions The sync options that control the synchronization.
- * @returns {Promise}
+ * @returns {Object} destinationData An object representing the destination including data and sync results.
  */
 async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
   const { mirror } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
@@ -479,7 +479,7 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
   //get the list(object) of needed data from each instance and extract the data
   const [sourceData, destinationData] = await Promise.all([
     ExtractData(sourceEnv, GetExtractOptions(syncOptions), syncOptions),
-    ExtractData(destinationEnv, GetExtractOptions(syncOptions, true), syncOptions)
+    ExtractData(destinationEnv, GetExtractOptions(syncOptions, true), syncOptions),
   ]);
 
   //convert objects to import-ready objects and sync into xMatters
@@ -493,7 +493,7 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
   //Write out any error with the data.
   destinationEnv.logErrors();
 
-  return destinationData.syncResults;
+  return destinationData;
 }
 
 /**
@@ -501,7 +501,7 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
  * @param {module:common.xMattersData} sourceData The data to synchronize into xMatters.
  * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
  * @param {SyncOptions} syncOptions The sync options that control the synchronization.
- * @returns {Promise}
+ * @returns {Object} destinationData An object representing the destination including data and sync results.
  */
 async function DataToxMatters(sourceData, env, syncOptions = {}) {
   //set options and defaults.
@@ -524,7 +524,7 @@ async function DataToxMatters(sourceData, env, syncOptions = {}) {
   //Write out any error with the data.
   env.logErrors();
 
-  return destinationData.syncResults;
+  return destinationData;
 }
 
 /***
@@ -556,7 +556,7 @@ function GetExtractOptions(syncOptions, isDestination) {
     planProperties,
     scenarios,
     sharedLibraries,
-    subscriptions
+    subscriptions,
   } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   const get = {};
@@ -640,9 +640,13 @@ function GetExtractOptions(syncOptions, isDestination) {
     }
   }
 
-  if (syncForms) get.forms = true;
+  if (syncForms) {
+    get.plans = true;
+    get.forms = true;
+  }
 
   if (scenarios) {
+    get.plans = true;
     get.forms = true;
     get.scenarios = true;
     if (isDestination) {
@@ -663,8 +667,8 @@ function GetExtractOptions(syncOptions, isDestination) {
 
   if (integrations) {
     get.plans = true;
-    get.integrations = true;
     get.forms = true;
+    get.integrations = true;
   }
 
   if (planConstants) {
@@ -740,7 +744,7 @@ async function ExtractData(env, extractOptions, syncOptions) {
     scenariosQuery,
     sharedLibrariesQuery,
     subscriptionsQuery,
-    subscriptionFormsQuery
+    subscriptionFormsQuery,
   } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   const data = {};
@@ -771,8 +775,19 @@ async function ExtractData(env, extractOptions, syncOptions) {
     data.events = await xm.events.getMany(env, eventsQuery);
   }
 
-  if (extractOptions.forms) {
-    data.forms = await xm.forms.getMany(env, formsQuery);
+  if (extractOptions.plans) {
+    data.plans = await xm.plans.getMany(env, plansQuery);
+  }
+
+  if (extractOptions.forms &amp;&amp; data.plans) {
+    const plansForms = await Promise.all(
+      data.plans.map(async ({ id }) => {
+        return xm.forms.getManyInPlan(env, formsQuery, id);
+      })
+    );
+
+    if (!data.forms) data.forms = [];
+    plansForms.map(planForms => (data.forms = data.forms.concat(planForms)));
   }
 
   if (extractOptions.scenarios &amp;&amp; data.forms) {
@@ -893,10 +908,6 @@ async function ExtractData(env, extractOptions, syncOptions) {
     );
   }
 
-  if (extractOptions.plans) {
-    data.plans = await xm.plans.getMany(env, plansQuery);
-  }
-
   if (extractOptions.integrations &amp;&amp; data.plans) {
     //data.integrations = ExtractDataFromParent(data.plans, 'plan', 'integrations'); //this does not include logs.
     if (!data.integrations) data.integrations = [];
@@ -1007,7 +1018,7 @@ async function ExtractData(env, extractOptions, syncOptions) {
     }); */
   }
 
-  if (extractOptions.roles &amp;&amp; data.plans) {
+  if (extractOptions.roles) {
     data.roles = await xm.roles.getMany(env, rolesQuery);
   }
 
@@ -1101,7 +1112,7 @@ async function ConvertAndSyncObject(
     //convert data to import ready data using the 'exportToImport' function
     [sourceData[objectName], destinationData[objectName]] = await Promise.all([
       xm[module].exportToImport(destination, sourceData[objectName], destinationData, options),
-      xm[module].exportToImport(destination, destinationData[objectName], destinationData, options)
+      xm[module].exportToImport(destination, destinationData[objectName], destinationData, options),
     ]);
   }
 
@@ -1196,7 +1207,7 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     scenariosOptions,
     subscriptionsFilter,
     subscriptionsTransform,
-    subscriptionsOptions
+    subscriptionsOptions,
   } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   //remove supervisors from the sync fields for people so it doesn't trigger as needing update.
@@ -1211,13 +1222,13 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     mirror,
     delayRemoval,
     defaultSupervisorId,
-    deleteShiftsOnCreate: true
+    deleteShiftsOnCreate: true,
   });
   const _shiftsOptions = _.defaultsDeep(shiftsOptions, { mirror, delayRemoval: false });
   const _dynamicTeamsOptions = _.defaultsDeep(dynamicTeamsOptions, {
     mirror,
     delayRemoval,
-    defaultSupervisorId
+    defaultSupervisorId,
   });
   const _temporaryAbsencesOptions = _.defaultsDeep(temporaryAbsencesOptions, { mirror, delayRemoval: false });
   const _integrationsOptions = _.defaultsDeep(integrationsOptions, { mirror, delayRemoval: false });
@@ -1243,7 +1254,7 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
       'temporaryAbsences',
       temporaryAbsencesFilter,
       temporaryAbsencesTransform,
-      _temporaryAbsencesOptions
+      _temporaryAbsencesOptions,
     ],
     [plans, 'plans', plansFilter, plansTransform, _plansOptions],
     [planConstants, 'planConstants', planConstantsFilter, planConstantsTransform, _planConstantsOptions],
@@ -1254,11 +1265,11 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
       'sharedLibraries',
       sharedLibrariesFilter,
       sharedLibrariesTransform,
-      _sharedLibrariesOptions
+      _sharedLibrariesOptions,
     ],
     [integrations, 'integrations', integrationsFilter, integrationsTransform, _integrationsOptions],
     [scenarios, 'scenarios', scenariosFilter, scenariosTransform, _scenariosOptions],
-    [subscriptions, 'subscriptions', subscriptionsFilter, subscriptionsTransform, _subscriptionsOptions]
+    [subscriptions, 'subscriptions', subscriptionsFilter, subscriptionsTransform, _subscriptionsOptions],
   ];
 
   //assign all object tracking for cross object sync use.
@@ -1276,22 +1287,26 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
   });
 
   //sync each object type in order.
+  try {
+    for (let i = 0; i &lt; objectNames.length; i++) {
+      const [shouldSync, objectName, filter, transform, options] = objectNames[i];
 
-  for (let i = 0; i &lt; objectNames.length; i++) {
-    const [shouldSync, objectName, filter, transform, options] = objectNames[i];
-
-    if (shouldSync) {
-      await ConvertAndSyncObject(
-        sourceData,
-        destinationData,
-        env,
-        objectName,
-        objectName,
-        filter,
-        transform,
-        options
-      );
+      if (shouldSync) {
+        await ConvertAndSyncObject(
+          sourceData,
+          destinationData,
+          env,
+          objectName,
+          objectName,
+          filter,
+          transform,
+          options
+        );
+      }
     }
+  } catch (error) {
+    destinationData.syncResults.failure = true;
+    env.log.error(error);
   }
 }
 

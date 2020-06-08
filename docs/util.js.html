@@ -130,13 +130,14 @@ function CsvToJson(text, options = {}) {
   let i = 0;
   let r = 0;
   let toggle = true;
+  const delimiter = options.delimiter || ',';
 
   //parse text and look for encoded commas.
   for (let character of text) {
     if (character === '"') {
       if (toggle &amp;&amp; character === p) row[i] += character;
       toggle = !toggle;
-    } else if (character === ',' &amp;&amp; toggle) character = row[++i] = '';
+    } else if (character === delimiter &amp;&amp; toggle) character = row[++i] = '';
     else if (character === '\n' &amp;&amp; toggle) {
       if (p === '\r') row[i] = row[i].slice(0, -1);
       row = lines[++r] = [(character = '')];
@@ -152,7 +153,7 @@ function CsvToJson(text, options = {}) {
 
   headers = headers.map(colName => colName.trim());
 
-  headers.filter(function(header) {
+  headers.filter(function (header) {
     return header != null &amp;&amp; header !== '';
   });
 

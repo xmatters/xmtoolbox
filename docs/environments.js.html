@@ -158,7 +158,7 @@
  */
 function create(subdomain, user, pass, options = {}) {
   const limiter = new Bottleneck({
-    maxConcurrent: process.env.MAX_CONCURRENT_CONNECTIONS || 5
+    maxConcurrent: process.env.MAX_CONCURRENT_CONNECTIONS || 5,
   });
   const auth = { user, pass };
   const baseUrl = `https://${subdomain}.xmatters.com`;
@@ -179,13 +179,17 @@ function create(subdomain, user, pass, options = {}) {
   if (typeof logIndex !== 'number') logIndex = 1;
 
   const log = {
-    error: logIndex >= 1 ? console.error : () => {},
+    error: function () {
+      const args = Array.prototype.slice.call(arguments);
+      errors.push(new Error(args));
+      logIndex >= 1 ? console.error.apply(null, arguments) : () => {};
+    },
     warn: logIndex >= 2 ? console.warn : () => {},
     info: logIndex >= 3 ? console.info : () => {},
     time: logIndex >= 3 ? console.time : () => {},
     timeEnd: logIndex >= 3 ? console.timeEnd : () => {},
     log: logIndex >= 4 ? console.log : () => {},
-    debug: logIndex >= 4 ? console.log : () => {}
+    debug: logIndex >= 4 ? console.log : () => {},
   };
 
   if (readOnly) log.info('Environment', subdomain, 'Read-Only Mode');

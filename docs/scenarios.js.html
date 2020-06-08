@@ -160,11 +160,11 @@ async function update(env, scenario, scenarioId, formId) {
  * @param {xMattersObjects} destinationData The xMatters data for the destination.
  * @returns {Promise}
  */
-async function exportToImport(destination, scenarios, destinationData) {
+function exportToImport(destination, scenarios, destinationData) {
   const destinationForms = (destinationData.all ? destinationData.all.forms : null) || destinationData.forms;
   const destinationPeople =
     (destinationData.all ? destinationData.all.people : null) || destinationData.people;
-  return await scenarios.map(scenario => {
+  return scenarios.map(scenario => {
     {
       //set plan
       //plan can be supplied as a string representing the name of the plan or an object with name key.
@@ -206,12 +206,18 @@ async function exportToImport(destination, scenarios, destinationData) {
         });
       }
 
-      if (scenario.voicemailOptions.every === 0) {
+      //modifed for xMatters support ticket #155953
+      if (scenario.voicemailOptions &amp;&amp; scenario.voicemailOptions.every === 0) {
         delete scenario.voicemailOptions.every;
       }
 
       //TODO: Remove when bug is resolved. Workaround for empty description. xMatters Support Ticket #152555
       if (scenario.description === '') scenario.description = '_';
+
+      //added for xMatters support ticket #155953
+      if (!scenario.senderOverrides) scenario.senderOverrides = {};
+      if (!scenario.handling) scenario.handling = {};
+      if (!scenario.overrideDeviceRestrictions) scenario.overrideDeviceRestrictions = {};
 
       delete scenario.position;
       delete scenario.plan;
@@ -240,7 +246,7 @@ const fields = [
   'targetDeviceNames',
   'properties',
   'permitted',
-  'recipients'
+  'recipients',
 ];
 
 /**
