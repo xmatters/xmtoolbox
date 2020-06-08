@@ -159,13 +159,12 @@ Object as defined by xMatters (caveats)
 - Plan Constants
 - Plan Endpoints
 - Plan Properties (delete not available)
-- Roles
 - Scenarios (delete not available)
 - Shared Libraries
 - Shifts
 - Sites
-- Subscriptions (Subscription forms need to be manually created)
-- Temporary Absences (These generate notifications when created)
+- Subscriptions (supporting subscription forms need to be manually created and maintained)
+- Temporary Absences (Warning: These generate notifications when created)
 - Workflow HTTP Trigger
 
 ## Odds and Ends
