@@ -98,8 +98,8 @@
  * @param {Object} query A json object representing the query string parameters for this request.
  * @returns {Promise&lt;Site>} Site Object Requested
  */
-async function get(env, siteId, query) {
-  return common.get(env, '/api/xm/1/sites/', siteId, query, 'Site');
+async function get(env, siteId, query, throwError) {
+  return common.get(env, '/api/xm/1/sites/', siteId, query, 'Site', throwError);
 }
 
 /**
@@ -179,7 +179,7 @@ const fields = [
   'state',
   'country',
   'latitude',
-  'longitude'
+  'longitude',
 ];
 
 /**

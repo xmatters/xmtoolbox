@@ -365,7 +365,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line428">line 428</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line435">line 435</a>
             </span>
         </p>
     
@@ -615,7 +615,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line201">line 201</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line208">line 208</a>
             </span>
         </p>
     
@@ -843,7 +843,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line647">line 647</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line654">line 654</a>
             </span>
         </p>
     
@@ -1071,7 +1071,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line635">line 635</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line642">line 642</a>
             </span>
         </p>
     
@@ -1274,7 +1274,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line296">line 296</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line303">line 303</a>
             </span>
         </p>
     
@@ -1500,7 +1500,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line395">line 395</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line402">line 402</a>
             </span>
         </p>
     
@@ -5975,6 +5975,181 @@
     
 
     <td class="description last">Individual sync options for subscriptions. By default fields property is set to subscriptions.fields(), mirror uses the global options value.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>device</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">*</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Supplying an identifier such as a device TargetName (format: "person_targetName|device_name") or a device object changes the method used to extract a device by limiting to a specific device. This may be used to synchronize a single device or limit the sites extracted device for a person. An alternate API method is used (devices.get) and appropiate devicesQuery is applied to that api which may not support the same functionality as the standard endpoints(devices.getMany) used for extracting records from xMatters in the sync.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>group</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">*</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Supplying an identifier such as a targetName or a group object changes the method used to extract a group, group members, and shifts by limiting to a specific group. This may be used to synchronize a single group, shift, or group members. Also apllies to extracting onCall in the ExtractData function. Alternate API methods is used (groups.get) and groupsQuery is applied to that api which may not support the same functionality as the standard endpoints(groups.getMany) used for extracting records from xMatters in the sync.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>person</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">*</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Supplying an identifier such as a targetName or a person object changes the method used to extract a person and devices by limiting to a specific person. This may be used to synchronize a single person, their devices. Alternate API methods are used (people.get and people.getDevices) and appropiate syncOption queries are applied to those apis which may not support the same functionality as the standard endpoints(people.getMany and devices.getMany) used for extracting records from xMatters in the sync.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>plan</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">*</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Supplying an identifier such as a plan name or a plan object changes the method used to extract a plan, forms, scenarios, integrations, plan constants, plan endpoints, plan properties, and shared libraries by limiting to a specific plan. This may be used to synchronize a single plan or aforementioned plan sub component(s). An alternate API method is used (plans.get) and plansQuery is applied to that api which may not support the same functionality as the standard endpoints(plans.getMany) used for extracting records from xMatters in the sync.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>site</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">*</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Supplying an identifier such as a name or a site object changes the method used to extract a site by limiting to a specific site. This may be used to synchronize a single site or limit the sites extracted for a person or group sync. An alternate API method is used (sites.get) and appropiate sitesQuery is applied to that api which may not support the same functionality as the standard endpoints(sites.getMany) used for extracting records from xMatters in the sync.</td>
 </tr>
 
     

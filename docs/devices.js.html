@@ -98,8 +98,8 @@
  * @param {Object} query A json object representing the query string parameters for this request.
  * @returns {Promise&lt;Device>} Device Object Requested
  */
-async function get(env, deviceId, query) {
-  return common.get(env, '/api/xm/1/devices/', deviceId, query, 'Device');
+async function get(env, deviceId, query, throwError) {
+  return common.get(env, '/api/xm/1/devices/', deviceId, query, 'Device', throwError);
 }
 
 /**
@@ -236,7 +236,7 @@ const fields = [
   'owner',
   'recipientType',
   'status',
-  'timeframes'
+  'timeframes',
 ];
 
 /**

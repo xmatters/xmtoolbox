@@ -98,8 +98,8 @@
  * @param {Object} query A json object representing the query string parameters for this request.
  * @returns {Promise&lt;Person>} Person Object Requested
  */
-async function get(env, personId, query) {
-  return common.get(env, '/api/xm/1/people/', personId, query, 'Person');
+async function get(env, personId, query, throwError) {
+  return common.get(env, '/api/xm/1/people/', personId, query, 'Person', throwError);
 }
 
 /**
@@ -256,13 +256,13 @@ async function exportToImport(destination, people, destinationData) {
 
       //pull any null values from the supervisor array. will be null if matches are not found.
       if (person.supervisors) {
-        person.supervisors = person.supervisors.filter(function(el) {
+        person.supervisors = person.supervisors.filter(function (el) {
           return el != null;
         });
       }
 
       //data from xMatters....
-      if (person.roles.data) {
+      if (person.roles &amp;&amp; person.roles.data) {
         person.roles = person.roles.data.map(d => d.name);
       }
 
@@ -290,7 +290,7 @@ const fields = [
   'supervisors',
   'targetName',
   'timezone',
-  'webLogin'
+  'webLogin',
 ];
 
 /**

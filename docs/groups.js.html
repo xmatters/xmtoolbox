@@ -99,8 +99,8 @@ const shifts = require('./shifts');
  * @param {Object} query A json object representing the query string parameters for this request.
  * @returns {Promise&lt;Group>} Group Object Requested
  */
-async function get(env, groupId, query) {
-  return common.get(env, '/api/xm/1/groups/', groupId, query, 'Group');
+async function get(env, groupId, query, throwError) {
+  return common.get(env, '/api/xm/1/groups/', groupId, query, 'Group', throwError);
 }
 
 /**
@@ -255,7 +255,7 @@ const fields = [
   'status',
   'supervisors',
   'targetName',
-  'useDefaultDevices'
+  'useDefaultDevices',
 ];
 
 /**
