@@ -19,6 +19,7 @@
     <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
     <link type="text/css" rel="stylesheet" href="styles/app.min.css">
     <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+    
 </head>
 
 <body>
@@ -28,7 +29,7 @@
             <nav class="navbar" role="navigation" aria-label="main navigation">
                 <div class="navbar-brand">
                     
-                     
+                    
                         <h1 class="navbar-item">xmtoolbox Documentation</h1>
                     
                     <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
@@ -37,7 +38,7 @@
                         <span aria-hidden="true"></span>
                     </a>
                 </div>
-                 
+                
                 <div class="navbar-menu">
                     <div class="navbar-end">
                     
@@ -58,7 +59,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#request">request</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -68,7 +69,7 @@
                         <p>Source</p>
                         <h1>common.js</h1>
                     </header>
-                    
+
                     
 
 
@@ -76,7 +77,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const _rp = require('request-promise');
+            <pre class="prettyprint source linenums"><code>const _request = require('./request');
 const _ = require('lodash');
 //prevent ETIMEDOUT error from connections.
 process.env.UV_THREADPOOL_SIZE = 128; //https://stackoverflow.com/questions/24320578/node-js-get-request-etimedout-esockettimedout/37946324#37946324
@@ -96,14 +97,15 @@ process.env.UV_THREADPOOL_SIZE = 128; //https://stackoverflow.com/questions/2432
 const rp = async function (options, log) {
   const retries = options.retries || 3;
   const retryDelay = options.retryDelay || 2000;
-  const throwError = options.hasOwnProperty('throwError') ? options.throwError : true;
+  const throwError =
+    options.hasOwnProperty('throwError') &amp;&amp; options.throwError !== undefined ? options.throwError : true;
 
   if (!options.timeout) options.timeout = 5000;
 
   let attempts = 0;
   while (attempts &lt; retries) {
     try {
-      return await _rp(options);
+      return await _request(options);
     } catch (error) {
       if (
         //known error codes
@@ -129,21 +131,21 @@ const rp = async function (options, log) {
       attempts++;
       const details = error.response &amp;&amp; error.response.body ? error.response.body : error;
       const level = attempts === 3 ? 'error' : 'warn';
+      if (!options.headers) options.headers = {};
+
       log[level](
         `attempt: ${attempts}`,
         'Response',
         JSON.stringify(details, null, 2).replace(options.auth.pass, 'PASSWORD_EXCLUDED'),
         'Request',
-        JSON.stringify(error.options, null, 2).replace(options.auth.pass, 'PASSWORD_EXCLUDED')
+        JSON.stringify(error.options, null, 2)
+          .replace(options.auth.pass, 'PASSWORD_EXCLUDED')
+          .replace(options.headers.Authorization, 'AUTHORIZATION_EXCLUDED')
       );
       await sleep(retryDelay);
 
       if (attempts >= retries &amp;&amp; throwError) throw error;
     }
-
-    throw Error(
-      `The response from xMatters was invalid after multiple attempts. Pleae review the output above for more details. Related request: ${options.method} ${options.uri}`
-    );
   }
 };
 
@@ -215,7 +217,7 @@ async function get({ baseUrl, limiter, auth, subdomain, log }, api, id, query = 
   const body = await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, 'Got', id);
 
-  return JSON.parse(body);
+  return body;
 }
 
 /**
@@ -241,14 +243,14 @@ async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = 
     return [];
   }
 
-  const resBody = JSON.parse(response);
-  let list = resBody.data;
+  const body = response;
+  let list = body.data;
 
-  const queue = requestList(resBody.total, auth, uri); //queue request for records > 100
+  const queue = requestList(body.total, auth, uri); //queue request for records > 100
 
   await Promise.all(
     queue.map(async function (options) {
-      const { data } = JSON.parse(await limitControl(limiter, rp, options, log));
+      const { data } = await limitControl(limiter, rp, options, log);
       list = list.concat(data);
     })
   );
@@ -284,7 +286,11 @@ async function create(
 
   const body = readOnly ? json : await limitControl(limiter, rp, options, log);
   const id = body &amp;&amp; body.id ? body.id : '';
-  log.debug('XMAPI:', subdomain, label, 'Created', name, 'id:', id);
+  if (id) {
+    log.debug('XMAPI:', subdomain, label, 'Created', name, 'id:', id);
+  } else {
+    log.debug('XMAPI:', subdomain, label, 'Not Created', name);
+  }
   return body;
 }
 
@@ -333,7 +339,12 @@ async function update(
   const options = { method: 'POST', uri, auth, json, throwError };
   log.debug('XMAPI:', subdomain, label, 'Update', name, 'id:', id);
   const body = readOnly ? json : await limitControl(limiter, rp, options, log);
-  log.debug('XMAPI:', subdomain, label, 'Updated', name, 'id:', id);
+  const _id = body &amp;&amp; body.id ? body.id : '';
+  if (_id) {
+    log.debug('XMAPI:', subdomain, label, 'Updated', name, 'id:', _id);
+  } else {
+    log.debug('XMAPI:', subdomain, label, 'Not Updated', name);
+  }
   return body;
 }
 
@@ -366,9 +377,17 @@ async function upload({ baseUrl, limiter, auth, subdomain, log }, api, formData,
  * @returns {Object} Body from from create request response
  */
 async function request({ baseUrl, limiter, auth, subdomain, log }, api, query, options, label = '') {
-  let uri = `${baseUrl}${api.replace(baseUrl, '')}?${queryString(query)}`;
+  let uri = `${baseUrl}${api.replace(baseUrl, '')}`;
+  if (uri.includes('?')) {
+    uri += `&amp;${queryString(query)}`;
+  } else {
+    uri += `?${queryString(query)}`;
+  }
   options.uri = uri;
-  options.auth = auth;
+  if (!api.includes('apiKey') &amp;&amp; !query.hasOwnProperty('apiKey')) {
+    options.auth = auth;
+  }
+
   log.debug('XMAPI:', subdomain, label, options.method);
   const body = await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, options.method);
@@ -376,8 +395,8 @@ async function request({ baseUrl, limiter, auth, subdomain, log }, api, query, o
 }
 
 async function limitControl(limiter, rp, options, log) {
-  options.transform = (body, response) => {
-    return { headers: response.headers, data: body };
+  options.transform = (data, response) => {
+    return { headers: response.headers, data };
   };
 
   const response = await limiter.schedule(rp, options, log);
@@ -524,13 +543,13 @@ async function syncObject(
         if (_.isMatch(destObjectProps, sourceObjectProps)) {
           destination.log.info(`SYNC: Skip ${name} (match):`, match[syncFields[0]]);
           matched.push(match);
-          return;
+          return sourceObject;
         } else {
           const update = _.defaults(sourceObjectProps, defaults);
           destination.log.info(`SYNC: Update ${name}:`, match[syncFields[0]]);
           if (typeof updateFunction === 'function') {
             updated.push(await updateFunction(destination, update, match.id, parentId));
-            return;
+            return sourceObject;
           } else {
             //if there is not an update function, delete then create to update
             destination.log.info(
@@ -542,7 +561,7 @@ async function syncObject(
             await deleteFunction(destination, match.id, parentId);
             updated.push(await createFunction(destination, update, parentId));
 
-            return;
+            return sourceObject;
           }
         }
       } else {
@@ -556,7 +575,7 @@ async function syncObject(
 
         created.push(await createFunction(destination, record, parentId));
 
-        return;
+        return sourceObject;
       }
     })
   );
@@ -650,8 +669,19 @@ exports.AssignParentObject = AssignParentObject;
     </div>
 
 
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Jul 02 2020 20:25:34 GMT-0400 (Eastern Daylight Time)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
 
 <script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
 </body>
 </html>

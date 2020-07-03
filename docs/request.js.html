@@ -5,7 +5,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>JSDoc: forms.js</title>
+    <title>JSDoc: request.js</title>
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -67,7 +67,7 @@
                 <div class="content" id="main-content-wrapper">
                     <header class="page-title">
                         <p>Source</p>
-                        <h1>forms.js</h1>
+                        <h1>request.js</h1>
                     </header>
 
                     
@@ -77,96 +77,101 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const common = require('./common');
+            <pre class="prettyprint source linenums"><code>//Brannon Vann Custom Request Module 1.0.1
+
+const http = require('http');
+const https = require('https');
+const util = require('util');
+const URL = require('url');
 
 /**
- * A module related to xMatters forms.&lt;br>&lt;br>
- * {@link https://help.xmatters.com/xmapi/index.html#forms}
+ * A request function to make http requests. Returns a promise that resolved to a string bod response or json if the response header content-type is json. The response may be modified using the transform option.
  *
- * @module forms
+ * Example Usage
+ * (async () => {
+ * const json = await request({
+ *   uri: 'http://192.168.2.123/api/something',
+ *   method: 'POST',
+ *   json: { name: 'POST TEST' }
+ * });
+ * console.log(json);
+ * })();
+ *
+ * @param {Object} options object to make request. Supported keys: uri, method, headers, auth, json, transform.
+ *
+ * uri: The URI for the request.
+ * method: default is 'GET' but other standard https methods are supported (all caps)
+ * auth: {user: "", pass: ""}
+ * headers: {name: value} headers may be set with this.
+ * json: any data for requests for methods like post.
+ * transform: a function in the form of (data, body)=> {} to transform the retruned response. Otherwise the data is returned.
+ *
+ *
+ * @returns {Promise}
  */
+async function request(options = {}) {
+  const { uri, method = 'GET', headers = {}, auth = {}, json, transform } = options;
+  const { user, pass } = auth;
 
-/**
- * Get a form in a plan from xMatters&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-a-form-in-a-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {string} formId The unique identifier (id) or name (targetName) of the form you want to retrieve.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @param {string} planId The unique identifier (id) or name (targetName) of the plan the forms belong to.
- * @returns {Promise&lt;Form>} The Form Objects Requested
- */
-async function get(env, formId, query, planId) {
-  return common.get(env, `/api/xm/1/plans/${planId}/forms/`, formId, query, 'Form');
+  const _options = URL.parse(uri);
+  _options.method = method;
+  _options.headers = headers;
+
+  if (auth) {
+    _options.headers.Authorization = `Basic ${Buffer.from(user + ':' + pass).toString('base64')}`;
+  }
+
+  if (json) {
+    _options.headers['content-type'] = 'application/json';
+    _options.data = JSON.stringify(json);
+  }
+  if (_options.data) _options.headers['Content-Length'] = Buffer.byteLength(_options.data);
+
+  const makeRequest = (options, callback) => {
+    const library = options.protocol === 'http:' ? http : https;
+    const req = library
+      .request(options, res => {
+        const { statusCode } = res;
+
+        let data = '';
+        res.on('data', chunk => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          if (!statusCode || !statusCode.toString().startsWith('2')) {
+            const err = new Error(data);
+            err.statusCode = statusCode;
+            err.data = data;
+            err.options = options;
+            throw err;
+          }
+
+          if (res.headers['content-type'] &amp;&amp; res.headers['content-type'].includes('application/json'))
+            data = JSON.parse(data);
+
+          if (transform) {
+            const transformed = transform(data, res);
+            return callback(null, transformed);
+          } else {
+            return callback(null, data);
+          }
+        });
+      })
+      .on('error', err => {
+        err.options = options;
+        callback(err);
+      });
+
+    if (options.data) req.write(options.data);
+
+    req.end();
+  };
+
+  return await util.promisify(makeRequest)(_options);
 }
 
-/**
- * Get all forms from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-forms}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @returns {Promise&lt;Form[]>} Array of Form Objects Requested
- */
-async function getMany(env, query) {
-  return common.getMany(env, '/api/xm/1/forms', query, 'Forms');
-}
-
-/**
- * Get all forms from xMatters in a plan matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-forms-in-a-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @param {string} planId The unique identifier (uuid) or name (targetName) of the plan the forms belong to. Names must be URL-encoded.
- * @returns {Promise&lt;Form[]>} Array of Form Objects Requested
- */
-async function getManyInPlan(env, query, planId) {
-  return common.getMany(env, `/api/xm/1/plans/${planId}/forms`, query, 'Forms In Plan');
-}
-
-/**
- * Get all response options from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-form-response-options}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @param {string} formId The unique identifier (uuid) or name (targetName) of the form you want to retrieve.
- * @param {string} planId The unique identifier (id) or name (targetName) of the plan the forms belong to.
- * @returns {Promise&lt;ResponseOption[]>} Array of Response Option Objects Requested
- */
-async function getResponseOptions(env, query, formId, planId) {
-  return common.getMany(
-    env,
-    `/api/xm/1/plans/${planId}/forms/${formId}/response-options`,
-    query,
-    'Form Response Options'
-  );
-}
-
-/**
- * Get all sections in a form from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-form-sections}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @param {string} formId The unique identifier (id) or name (targetName) of the form you want to retrieve.
- * @returns {Promise&lt;FormSection[]>} Array of Form Section Objects Requested
- */
-async function getFormSections(env, query, formId) {
-  return common.getMany(env, `/api/xm/1/forms/${formId}/sections`, query, 'Sections of Form');
-}
-
-exports.get = get;
-exports.getMany = getMany;
-exports.getManyInPlan = getManyInPlan;
-exports.getResponseOptions = getResponseOptions;
-exports.getFormSections = getFormSections;
+module.exports = request;
 </code></pre>
         </article>
     </section>
