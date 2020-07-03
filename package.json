@@ -1,6 +1,6 @@
 {
   "name": "xmtoolbox",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "A Node JS package for interacting with xMatters. Contains functions to interact with xMatters APIs or perform a synchronization, create events, libraries to convert data, and much much more!",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "bottleneck": "^2.19.5",
-    "lodash": "^4.17.15",
-    "request": "2.88.0",
-    "request-promise": "^4.2.4"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "better-docs": "^1.4.7"
