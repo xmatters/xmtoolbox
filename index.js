@@ -39,3 +39,4 @@ exports.sync = require('./lib/sync');
 exports.temporaryAbsences = require('./lib/temporaryAbsences');
 exports.uploads = require('./lib/uploads');
 exports.util = require('./lib/util');
+exports.request = require('./lib/request');
