@@ -133,14 +133,18 @@ const rp = async function (options, log) {
       const level = attempts === 3 ? 'error' : 'warn';
       if (!options.headers) options.headers = {};
 
+      let cleanLog = JSON.stringify(error.options, null, 2);
+      if (options.headers.Authorization)
+        cleanLog = cleanLog.replace(options.headers.Authorization, 'AUTHORIZATION_EXCLUDED');
+      if (options.auth &amp;&amp; options.auth.pass)
+        cleanLog = cleanLog.replace(options.auth.pass, 'PASSWORD_EXCLUDED');
+
       log[level](
         `attempt: ${attempts}`,
         'Response',
         JSON.stringify(details, null, 2).replace(options.auth.pass, 'PASSWORD_EXCLUDED'),
         'Request',
-        JSON.stringify(error.options, null, 2)
-          .replace(options.auth.pass, 'PASSWORD_EXCLUDED')
-          .replace(options.headers.Authorization, 'AUTHORIZATION_EXCLUDED')
+        cleanLog
       );
       await sleep(retryDelay);
 
@@ -210,9 +214,16 @@ function requestList(total, auth, uri, method = 'GET', json = null, pageSize = 1
  * @param {string} label The Label to define what type of object or objects are being acted on with this request. Primarily used for logging.
  * @returns {Object} Body from from get request response
  */
-async function get({ baseUrl, limiter, auth, subdomain, log }, api, id, query = {}, label = '', throwError) {
+async function get(
+  { baseUrl, limiter, auth, subdomain, log, proxy },
+  api,
+  id,
+  query = {},
+  label = '',
+  throwError
+) {
   const uri = `${baseUrl}${api}${encodeURI(id)}?${queryString(query)}`;
-  const options = { method: 'GET', uri, auth, throwError };
+  const options = { method: 'GET', uri, auth, throwError, proxy };
   log.debug('XMAPI:', subdomain, label, 'Get', id);
   const body = await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, 'Got', id);
@@ -229,12 +240,18 @@ async function get({ baseUrl, limiter, auth, subdomain, log }, api, id, query = 
  * @param {string} label The Label to define what type of object or objects are being acted on with this request. Primarily used for logging.
  * @returns {Object[]} Objects from all body.data arrays concatenated to a single array.
  */
-async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = {}, label = '', throwError) {
+async function getMany(
+  { baseUrl, limiter, auth, subdomain, log, proxy },
+  api,
+  query = {},
+  label = '',
+  throwError
+) {
   let uri = `${baseUrl}${api}?${queryString(query)}`;
   const label2 = query ? JSON.stringify(query) : '';
   log.debug('XMAPI:', subdomain, label, 'Get Many', label2);
 
-  const options = { method: 'GET', uri, auth, throwError };
+  const options = { method: 'GET', uri, auth, throwError, proxy };
 
   const body = await limitControl(limiter, rp, options, log);
 
@@ -269,7 +286,7 @@ async function getMany({ baseUrl, limiter, auth, subdomain, log }, api, query = 
  * @returns {Object} Body from from create request response
  */
 async function create(
-  { baseUrl, limiter, auth, subdomain, log, readOnly },
+  { baseUrl, limiter, auth, subdomain, log, readOnly, proxy },
   api,
   json,
   label = '',
@@ -281,7 +298,7 @@ async function create(
   if (dropId) {
     delete json.id;
   }
-  const options = { method: 'POST', uri, auth, json, throwError };
+  const options = { method: 'POST', uri, auth, json, throwError, proxy };
   log.debug('XMAPI:', subdomain, label, 'Create', name);
 
   const body = readOnly ? json : await limitControl(limiter, rp, options, log);
@@ -304,13 +321,13 @@ async function create(
  * @name delete
  */
 async function _delete(
-  { baseUrl, limiter, auth, subdomain, log, readOnly, throwError },
+  { baseUrl, limiter, auth, subdomain, log, readOnly, throwError, proxy },
   api,
   id,
   label = ''
 ) {
   const uri = `${baseUrl}${api}${id}`;
-  const options = { method: 'DELETE', uri, auth, throwError };
+  const options = { method: 'DELETE', uri, auth, throwError, proxy };
   log.debug('XMAPI:', subdomain, label, 'Delete', 'id:', id);
   const body = readOnly ? id : await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, 'Deleted', 'id:', id);
@@ -327,7 +344,7 @@ async function _delete(
  * @returns {Object} Body from from update request response
  */
 async function update(
-  { baseUrl, limiter, auth, subdomain, log, readOnly, throwError },
+  { baseUrl, limiter, auth, subdomain, log, readOnly, throwError, proxy },
   api,
   json,
   id,
@@ -336,7 +353,7 @@ async function update(
   const name = json.targetName || json.name || '';
   const uri = `${baseUrl}${api}`;
   json.id = id;
-  const options = { method: 'POST', uri, auth, json, throwError };
+  const options = { method: 'POST', uri, auth, json, throwError, proxy };
   log.debug('XMAPI:', subdomain, label, 'Update', name, 'id:', id);
   const body = readOnly ? json : await limitControl(limiter, rp, options, log);
   const _id = body &amp;&amp; body.id ? body.id : '';
@@ -356,11 +373,17 @@ async function update(
  * @param {string} label The Label to define what type of object or objects are being acted on with this request. Primarily used for logging.
  * @returns {Object} Body from from upload request response
  */
-async function upload({ baseUrl, limiter, auth, subdomain, log }, api, formData, label = '', throwError) {
+async function upload(
+  { baseUrl, limiter, auth, subdomain, log, proxy },
+  api,
+  formData,
+  label = '',
+  throwError
+) {
   const name = formData.targetName || formData.name || '';
   const uri = `${baseUrl}${api}`;
   const headers = { 'Content-Type': 'multipart/form-data' };
-  const options = { method: 'POST', uri, auth, formData, headers, throwError };
+  const options = { method: 'POST', uri, auth, formData, headers, throwError, proxy };
   log.debug('XMAPI:', subdomain, label, 'Upload', name);
   const body = readOnly ? formData : await limitControl(limiter, rp, options, log);
   log.debug('XMAPI:', subdomain, label, 'Upload', name);
@@ -376,7 +399,7 @@ async function upload({ baseUrl, limiter, auth, subdomain, log }, api, formData,
  * @param {string} label The Label to define what type of object or objects are being acted on with this request. Primarily used for logging.
  * @returns {Object} Body from from create request response
  */
-async function request({ baseUrl, limiter, auth, subdomain, log }, api, query, options, label = '') {
+async function request({ baseUrl, limiter, auth, subdomain, log, proxy }, api, query, options, label = '') {
   let uri = `${baseUrl}${api.replace(baseUrl, '')}`;
   if (uri.includes('?')) {
     uri += `&amp;${queryString(query)}`;
@@ -387,6 +410,8 @@ async function request({ baseUrl, limiter, auth, subdomain, log }, api, query, o
   if (!api.includes('apiKey') &amp;&amp; !query.hasOwnProperty('apiKey')) {
     options.auth = auth;
   }
+
+  options.proxy = proxy;
 
   log.debug('XMAPI:', subdomain, label, options.method);
   const body = await limitControl(limiter, rp, options, log);
@@ -671,7 +696,7 @@ exports.AssignParentObject = AssignParentObject;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Thu Jul 09 2020 10:40:15 GMT-0400 (Eastern Daylight Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Oct 30 2020 09:42:11 GMT-0400 (Eastern Daylight Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
