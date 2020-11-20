@@ -5,7 +5,7 @@ The xmtoolbox is a promise based node package to simplify the interaction with x
 Please have a look at the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start) for a full working node app.
 
 <aside class="notice">
-This library is currently in development. Please report any issues to: https://github.com/brannonvann/xmtoolbox/issues 
+Please report any issues/questions to: https://github.com/brannonvann/xmtoolbox/issues
 </aside>
 
 ## Simple To Use
