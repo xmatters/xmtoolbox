@@ -21,5 +21,8 @@
   },
   "devDependencies": {
     "better-docs": "^1.4.7"
+  },
+  "bin": {
+    "create-xmpw": "./create-xmpw.js"
   }
 }
