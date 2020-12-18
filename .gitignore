@@ -8,3 +8,5 @@ app.js
 .env
 test.js
 TODO.txt
+#xmtoolbox encrypted password files
+.xmpw
