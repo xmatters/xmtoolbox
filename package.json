@@ -1,6 +1,6 @@
 {
   "name": "xmtoolbox",
-  "version": "1.0.24",
+  "version": "1.0.25-beta.2",
   "description": "A Node JS package for interacting with xMatters. Contains functions to interact with xMatters APIs or perform a synchronization, create events, libraries to convert data, and much much more!",
   "main": "index.js",
   "scripts": {
@@ -24,5 +24,12 @@
   },
   "bin": {
     "create-xmpw": "./create-xmpw.js"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "printWidth": 110,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   }
 }
