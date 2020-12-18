@@ -14,7 +14,7 @@ rl.question('What is your xMatters subdomain? ', function (subdomain) {
   rl.question('What is your xMatters password? ', function (password) {
     rl.question('Please provide a 32 character encryption key ', function (key) {
       subdomain = subdomain.toLowerCase();
-      const passFilePath = `${subdomain}.xmp`;
+      const passFilePath = `${subdomain}.xmpw`;
       xm.util.EncryptToFile(passFilePath, password, key);
 
       if (subdomain && password && key) success = true;
