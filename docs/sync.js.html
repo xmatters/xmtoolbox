@@ -126,7 +126,6 @@ const xm = {
  * @property {boolean} [groups=false] Whether or not to get groups from xMatters.
  * @property {boolean} [integrations=false] Whether or not to get integrations from xMatters.
  * @property {boolean} [people=false] Whether or not to get people from xMatters.
- * @property {boolean} [personSupervisors=false] Whether or not to get personSupervisors from xMatters.
  * @property {boolean} [planConstants=false] Whether or not to get planConstants from xMatters.
  * @property {boolean} [planEndpoints=false] Whether or not to get planEndpoints from xMatters.
  * @property {boolean} [planProperties=false] Whether or not to get planProperties from xMatters.
@@ -158,7 +157,6 @@ function DefaultExtractOptions() {
     groups: false,
     integrations: false,
     people: false,
-    personSupervisors: false,
     planConstants: false,
     planEndpoints: false,
     planProperties: false,
@@ -207,8 +205,7 @@ function DefaultExtractOptions() {
  * @property {Object} [onCallQuery={ embed: 'members.owner,shift', membersPerShift: 100 }] Object representation of the query parameters supported by the Get many API request for onCall
  * @property {boolean} [people=false] Whether or not to synchronize people
  * @property {function} [peopleFilter=undefined] Array.filter(callback) function to apply to the people arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the peopl objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
- * @property {Object} [peopleQuery={ embed: 'roles' }, //possible to include ',devices' but simpler to extract devices separately] Object representation of the query parameters supported by the Get many API request for people
- * @property {boolean} [personSupervisors=false] Whether or not to synchronize personSupervisors
+ * @property {Object} [peopleQuery={ embed: 'roles' }, //',supervisors' and ',devices' possible. simpler to extract devices separately] Object representation of the query parameters supported by the Get many API request for people
  * @property {boolean} [planConstants=false] Whether or not to synchronize planConstants
  * @property {function} [planConstantsFilter=undefined] Array.filter(callback) function to apply to the planConstants arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the planConstant objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
  * @property {boolean} [planEndpoints=false] Whether or not to synchronize planEndpoints
@@ -277,6 +274,8 @@ function DefaultExtractOptions() {
  * @property {*} [person=undefined] Supplying an identifier such as a targetName or a person object changes the method used to extract a person and devices by limiting to a specific person. This may be used to synchronize a single person, their devices. Alternate API methods are used (people.get and people.getDevices) and appropiate syncOption queries are applied to those apis which may not support the same functionality as the standard endpoints(people.getMany and devices.getMany) used for extracting records from xMatters in the sync.
  * @property {*} [plan=undefined] Supplying an identifier such as a plan name or a plan object changes the method used to extract a plan, forms, scenarios, integrations, plan constants, plan endpoints, plan properties, and shared libraries by limiting to a specific plan. This may be used to synchronize a single plan or aforementioned plan sub component(s). An alternate API method is used (plans.get) and plansQuery is applied to that api which may not support the same functionality as the standard endpoints(plans.getMany) used for extracting records from xMatters in the sync.
  * @property {*} [site=undefined] Supplying an identifier such as a name or a site object changes the method used to extract a site by limiting to a specific site. This may be used to synchronize a single site or limit the sites extracted for a person or group sync. An alternate API method is used (sites.get) and appropiate sitesQuery is applied to that api which may not support the same functionality as the standard endpoints(sites.getMany) used for extracting records from xMatters in the sync.
+ * @property {function} [dataExtracted] A function that is called after data is acquired from source and destination but before any manipulation. You have full access to the destination data, destination environment, source data, and source environment(undefined when using DataToxMatters) to perform operations such as backup.&lt;br>&lt;br> Example: (destinationData, destinationEnv, sourceData, sourceEnv) => { fs.writeFileSync(`./data/${destinationEnv.subdomain}.backup.json`, JSON.stringify(destinationData))}
+ * @property {boolean} [continueOnError=false] Whether or not to continue sync when an error is encountered writing data into xMatters. Changing this option to true could result in greater number of errors since it continue to sync and downstream objects that referenced objects that failed to sync will also fail. Also, setting this to true will not result in a failure sync status when api errors are encountered.
  *
  */
 //dynamic teams are not supported using the targetName param until dynamic teams can be looked up by name (not just searched).
@@ -329,7 +328,6 @@ function DefaultSyncOptions() {
     people: false,
     peopleQuery: { embed: 'roles' }, //possible to include ',devices' but simpler to extract devices separately.
     peopleFilter: undefined,
-    personSupervisors: false,
 
     plans: false,
     plansQuery: { embed: 'creator,constants,endpoints,forms,propertyDefinitions,integrations' },
@@ -371,6 +369,8 @@ function DefaultSyncOptions() {
     temporaryAbsences: false,
     temporaryAbsencesQuery: {},
     temporaryAbsencesFilter: undefined,
+
+    continueOnError: false,
   };
 }
 
@@ -480,7 +480,7 @@ async function UserUploadToImport(json, env) {
  * @returns {Object} destinationData An object representing the destination including data and sync results.
  */
 async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
-  const { mirror } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
+  const { mirror, dataExtracted } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   //start sync
   destinationEnv.log.time('SYNC');
@@ -490,6 +490,10 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
     ExtractData(sourceEnv, GetExtractOptions(syncOptions), syncOptions),
     ExtractData(destinationEnv, GetExtractOptions(syncOptions, true), syncOptions),
   ]);
+
+  if (dataExtracted) {
+    dataExtracted(destinationData, destinationEnv, sourceData, sourceEnv);
+  }
 
   //convert objects to import-ready objects and sync into xMatters
   await ConvertAndSyncObjects(sourceData, destinationData, destinationEnv, syncOptions);
@@ -509,25 +513,33 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
  * @param {SyncOptions} syncOptions The sync options that control the synchronization.
  * @returns {Object} destinationData An object representing the destination including data and sync results.
  */
-async function DataToxMatters(sourceData, env, syncOptions = {}) {
+async function DataToxMatters(sourceData, destinationEnv, syncOptions = {}) {
   //set options and defaults.
   const { mirror } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
-  const { sameAsSource } = syncOptions;
+  const { sameAsSource, dataExtracted } = syncOptions;
   const isDestination = sameAsSource ? false : true;
 
   //start sync
-  env.log.time('SYNC');
+  destinationEnv.log.time('SYNC');
 
   //get the list(object) of needed data from each instance and extract the data
-  const destinationData = await ExtractData(env, GetExtractOptions(syncOptions, isDestination), syncOptions);
+  const destinationData = await ExtractData(
+    destinationEnv,
+    GetExtractOptions(syncOptions, isDestination),
+    syncOptions
+  );
+
+  if (dataExtracted) {
+    dataExtracted(destinationData, destinationEnv, sourceData);
+  }
 
   //convert objects to import-ready objects and sync into xMatters
-  await ConvertAndSyncObjects(sourceData, destinationData, env, syncOptions);
+  await ConvertAndSyncObjects(sourceData, destinationData, destinationEnv, syncOptions);
 
   //FOR MIRROR MODE ONLY after data is added, remove any objects remove dependent data in safe order
-  if (mirror) await MirrorOrderedDelete(env, destinationData.syncResults);
+  if (mirror) await MirrorOrderedDelete(destinationEnv, destinationData.syncResults);
 
-  env.log.timeEnd('SYNC');
+  destinationEnv.log.timeEnd('SYNC');
 
   return destinationData;
 }
@@ -545,7 +557,6 @@ function GetExtractOptions(syncOptions, isDestination) {
   const {
     sites,
     people,
-    personSupervisors,
     devices,
     groups,
     shifts,
@@ -611,11 +622,6 @@ function GetExtractOptions(syncOptions, isDestination) {
     }
   }
 
-  if (personSupervisors) {
-    //append supervisors to the person objects since supervisors can't be embedded from the request(2020-Jan-29)
-    get.personSupervisors = true;
-  }
-
   if (groupMembers) {
     get.groups = true;
     get.groupMembers = true;
@@ -642,6 +648,7 @@ function GetExtractOptions(syncOptions, isDestination) {
     if (isDestination) {
       get.people = true;
       get.devices = true;
+      get.dynamicTeams = true;
     }
   }
 
@@ -938,17 +945,6 @@ async function ExtractData(env, extractOptions, syncOptions) {
     }
   }
 
-  if (extractOptions.personSupervisors &amp;&amp; data.people) {
-    //dependent on data.people
-    //append supervisors to the person objects since supervisors can't be embedded from the request(2020-Jan-29)
-    data.people = await Promise.all(
-      data.people.map(async person => {
-        person.supervisors = await xm.people.getSupervisors(env, null, person.id);
-        return person;
-      })
-    );
-  }
-
   if (extractOptions.integrations &amp;&amp; data.plans) {
     //data.integrations = ExtractDataFromParent(data.plans, 'plan', 'integrations'); //this does not include logs.
     if (!data.integrations) data.integrations = [];
@@ -1195,7 +1191,6 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     sitesTransform,
     sitesOptions,
     people,
-    personSupervisors,
     peopleFilter,
     peopleTransform,
     peopleOptions,
@@ -1255,37 +1250,72 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     subscriptionsFilter,
     subscriptionsTransform,
     subscriptionsOptions,
+    continueOnError,
   } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
 
-  //remove supervisors from the sync fields for people so it doesn't trigger as needing update.
-  let peopleFields = peopleOptions &amp;&amp; peopleOptions.fields ? peopleOptions.fields : xm.people.fields;
-  if (!personSupervisors) peopleFields = peopleFields.filter(e => e !== 'supervisors');
-
-  const _sitesOptions = _.defaultsDeep(sitesOptions, { mirror, delayRemoval });
-  const _peopleOptions = _.defaultsDeep(peopleOptions, { mirror, delayRemoval, fields: peopleFields });
-  const _devicesOptions = _.defaultsDeep(devicesOptions, { mirror, delayRemoval: false });
-  const _groupMembersOptions = _.defaultsDeep(groupMembersOptions, { mirror, delayRemoval: false });
+  const _sitesOptions = _.defaultsDeep(sitesOptions, { mirror, delayRemoval, continueOnError });
+  const _peopleOptions = _.defaultsDeep(peopleOptions, { mirror, delayRemoval, continueOnError });
+  const _devicesOptions = _.defaultsDeep(devicesOptions, { mirror, delayRemoval: false, continueOnError });
+  const _groupMembersOptions = _.defaultsDeep(groupMembersOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
   const _groupsOptions = _.defaultsDeep(groupsOptions, {
     mirror,
     delayRemoval,
     defaultSupervisorId,
     deleteShiftsOnCreate: true,
+    continueOnError,
   });
-  const _shiftsOptions = _.defaultsDeep(shiftsOptions, { mirror, delayRemoval: false });
+  const _shiftsOptions = _.defaultsDeep(shiftsOptions, { mirror, delayRemoval: false, continueOnError });
   const _dynamicTeamsOptions = _.defaultsDeep(dynamicTeamsOptions, {
     mirror,
     delayRemoval,
     defaultSupervisorId,
+    continueOnError,
   });
-  const _temporaryAbsencesOptions = _.defaultsDeep(temporaryAbsencesOptions, { mirror, delayRemoval: false });
-  const _integrationsOptions = _.defaultsDeep(integrationsOptions, { mirror, delayRemoval: false });
-  const _plansOptions = _.defaultsDeep(plansOptions, { mirror, delayRemoval: false });
-  const _planConstantsOptions = _.defaultsDeep(planConstantsOptions, { mirror, delayRemoval: false });
-  const _planEndpointsOptions = _.defaultsDeep(planEndpointsOptions, { mirror, delayRemoval: false });
-  const _planPropertiesOptions = _.defaultsDeep(planPropertiesOptions, { mirror, delayRemoval: false });
-  const _sharedLibrariesOptions = _.defaultsDeep(sharedLibrariesOptions, { mirror, delayRemoval: false });
-  const _scenariosOptions = _.defaultsDeep(scenariosOptions, { mirror, delayRemoval: false });
-  const _subscriptionsOptions = _.defaultsDeep(subscriptionsOptions, { mirror, delayRemoval: false });
+  const _temporaryAbsencesOptions = _.defaultsDeep(temporaryAbsencesOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _integrationsOptions = _.defaultsDeep(integrationsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _plansOptions = _.defaultsDeep(plansOptions, { mirror, delayRemoval: false, continueOnError });
+  const _planConstantsOptions = _.defaultsDeep(planConstantsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _planEndpointsOptions = _.defaultsDeep(planEndpointsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _planPropertiesOptions = _.defaultsDeep(planPropertiesOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _sharedLibrariesOptions = _.defaultsDeep(sharedLibrariesOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _scenariosOptions = _.defaultsDeep(scenariosOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _subscriptionsOptions = _.defaultsDeep(subscriptionsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
 
   //create ordered array of object types with supporting options.
   const objectNames = [
@@ -1409,7 +1439,7 @@ exports.DefaultExtractOptions = DefaultExtractOptions;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Nov 20 2020 15:30:27 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Sun Dec 20 2020 17:07:13 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

@@ -366,7 +366,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line433">line 433</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line437">line 437</a>
             </span>
         </p>
     
@@ -492,7 +492,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line69">line 69</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line68">line 68</a>
             </span>
         </p>
     
@@ -616,7 +616,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line209">line 209</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line208">line 208</a>
             </span>
         </p>
     
@@ -844,7 +844,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line652">line 652</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line659">line 659</a>
             </span>
         </p>
     
@@ -1072,7 +1072,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line640">line 640</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line647">line 647</a>
             </span>
         </p>
     
@@ -2020,43 +2020,6 @@
     
 
     <td class="description last">Whether or not to get people from xMatters.</td>
-</tr>
-
-    
-        
-<tr class="deep-level-0">
-    
-        <td class="name"><code>personSupervisors</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            false
-        
-        </td>
-    
-
-    <td class="description last">Whether or not to get personSupervisors from xMatters.</td>
 </tr>
 
     
@@ -3695,49 +3658,12 @@
     
         <td class="default">
         
-            { embed: 'roles' }, //possible to include ',devices' but simpler to extract devices separately
+            { embed: 'roles' }, //',supervisors' and ',devices' possible. simpler to extract devices separately
         
         </td>
     
 
     <td class="description last">Object representation of the query parameters supported by the Get many API request for people</td>
-</tr>
-
-    
-        
-<tr class="deep-level-0">
-    
-        <td class="name"><code>personSupervisors</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            false
-        
-        </td>
-    
-
-    <td class="description last">Whether or not to synchronize personSupervisors</td>
 </tr>
 
     
@@ -6191,6 +6117,78 @@
 </tr>
 
     
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>dataExtracted</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">function</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">A function that is called after data is acquired from source and destination but before any manipulation. You have full access to the destination data, destination environment, source data, and source environment(undefined when using DataToxMatters) to perform operations such as backup.<br><br> Example: (destinationData, destinationEnv, sourceData, sourceEnv) => { fs.writeFileSync(`./data/${destinationEnv.subdomain}.backup.json`, JSON.stringify(destinationData))}</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>continueOnError</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last">Whether or not to continue sync when an error is encountered writing data into xMatters. Changing this option to true could result in greater number of errors since it continue to sync and downstream objects that referenced objects that failed to sync will also fail. Also, setting this to true will not result in a failure sync status when api errors are encountered.</td>
+</tr>
+
+    
     </tbody>
 </table>
 
@@ -6232,7 +6230,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line98">line 98</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line96">line 96</a>
             </span>
         </p>
     
@@ -6264,7 +6262,7 @@
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Fri Nov 20 2020 15:30:28 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Sun Dec 20 2020 17:07:13 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
