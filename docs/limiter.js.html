@@ -5,7 +5,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>JSDoc: plans.js</title>
+    <title>JSDoc: limiter.js</title>
 
     <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -67,7 +67,7 @@
                 <div class="content" id="main-content-wrapper">
                     <header class="page-title">
                         <p>Source</p>
-                        <h1>plans.js</h1>
+                        <h1>limiter.js</h1>
                     </header>
 
                     
@@ -77,143 +77,65 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const common = require('./common');
-
-/**
- * A module related to xMatters communication plans.&lt;br>&lt;br>
- * {@link https://help.xmatters.com/xmapi/index.html#plans}
- *
- * @module plans
+            <pre class="prettyprint source linenums"><code>/**
+ * A custom concurrent connection limiter for xmtoolbox
  */
+function Limiter(options = {}) {
+  this.taskQueue = [];
+  const maxConcurrent = options.maxConcurrent;
+  this.taskCount = 0;
 
-/**
- * Get a plan from xMatters&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-a-communication-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {string} planId The unique identifier (id) or name of the communication plan.&lt;br>&lt;br>
- * Examples:&lt;br>
- * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
- * - MIM
- * @param {Object} query A json object representing the query string parameters for this request.
- * @returns {Promise&lt;Plan>} Plan Object Requested
- */
-async function get(env, planId, query) {
-  return common.get(env, '/api/xm/1/plans/', planId, query, 'Communication Plan');
-}
+  this.queueProcessor = function () {
+    //if something in queue and processing available.
+    if (this.taskQueue[0] &amp;&amp; this.taskCount &lt; maxConcurrent) {
+      //up counter
+      this.taskCount += 1;
 
-/**
- * Get all plans from xMatters matching the query. Please refer to the link below for the available query parameters.&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#get-communication-plans}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Object} query A json object representing the query string parameters for this request.
- * @returns {Promise&lt;Plan[]>} Array of Plan Objects Requested
- */
-async function getMany(env, query) {
-  return common.getMany(env, '/api/xm/1/plans', query, 'Communication Plans');
-}
-
-/**
- * Create a communication plan in xMatters&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#create-a-communication-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Plan} plan {@link https://help.xmatters.com/xmapi/index.html#plan-object}
- * @returns {Promise&lt;Plan>} Plan Object Created
- */
-async function create(env, plan) {
-  return common.create(env, '/api/xm/1/plans', plan, 'Communication Plan', true);
-}
-
-/**
- * Update a plan in xMatters&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#modify-communication-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {Plan} plan {@link https://help.xmatters.com/xmapi/index.html#plan-object}
- * @param {string} planId The unique identifier (id) of the communication plan.&lt;br>&lt;br>
- * Examples:&lt;br>
- * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
- * @returns {Promise&lt;Plan>} Plan Object Updated
- */
-async function update(env, plan, planId) {
-  return common.update(env, '/api/xm/1/plans/', plan, planId, 'Plan');
-}
-
-/**
- * Delete a communication plan in xMatters&lt;br>&lt;br>
- *
- * {@link https://help.xmatters.com/xmapi/index.html#delete-a-plan}
- *
- * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance.
- * @param {string} planId The unique identifier (id) or name of the communication plan.&lt;br>&lt;br>
- * Examples:&lt;br>
- * - b2341d69-8b83-4660-b8c8-f2e728f675f9&lt;br>
- * - MIM
- * @returns {Promise}
- * @name delete
- */
-async function _delete(env, planId) {
-  await common.delete(env, '/api/xm/1/plans/', planId, 'Plan');
-}
-
-/**
- * Transforms an array of records exported from xMatters to the format needed to import into xMatters.
- * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
- * @param {Plan[]} plans Array of plan objects to transform.
- * @returns {Promise}
- */
-async function exportToImport(destination, plans) {
-  return common.convertDefaultInitial(await plans, convert);
-
-  function convert(plan) {
-    {
-      return plan;
+      //get task and remove it from TaskQueue
+      const task = this.taskQueue.shift();
+      this.taskProcessor(task);
     }
-  }
+
+    if (this.taskQueue.length > 0) {
+      setImmediate(this.queueProcessor.bind(this));
+    }
+  };
+
+  /**
+   * Schedule a promise based task to be completed according the limiter configuration.
+   * @param {*} fn
+   * @param  {...any} args
+   */
+  this.schedule = async function (fn, ...args) {
+    let scheduledTask;
+    const task = new Promise(
+      (resolve, reject) =>
+        (scheduledTask = {
+          resolve,
+          reject,
+          fn,
+          args,
+        })
+    );
+    this.taskQueue.push(scheduledTask);
+    setImmediate(this.queueProcessor.bind(this));
+    return task;
+  };
+
+  this.taskProcessor = async function taskProcessor(task) {
+    try {
+      const result = await task.fn.apply(null, task.args);
+      task.resolve(result);
+    } catch (error) {
+      task.reject(error);
+    }
+
+    //down counter
+    this.taskCount -= 1;
+  };
 }
 
-/**
- * The key values from the object that can be synchronized.
- */
-const fields = ['name', 'description', 'enabled', 'accessibleByAll', 'loggingLevel'];
-
-/**
- * Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
- * @param {module:environments.xMattersEnvironment} destination The xmtoolbox representation of the target or destination xMatters instance.
- * @param {Plan[]} sourcePlans An array of the communication plan objects to synchronize from the source data.
- * @param {Plan[]} destination The xmtoolbox representation of the target or destination xMatters instance.Plans
- * @param {Object} options
- * @returns {Promise&lt;module:sync.SyncResults>}
- */
-async function sync(destination, sourcePlans, destinationPlans, options) {
-  return common.syncObject(
-    'Communication Plan',
-    sourcePlans,
-    destinationPlans,
-    destination,
-    ['name'],
-    fields,
-    create,
-    update,
-    _delete,
-    options
-  );
-}
-
-exports.get = get;
-exports.getMany = getMany;
-exports.create = create;
-exports.update = update;
-exports.delete = _delete;
-exports.exportToImport = exportToImport;
-exports.fields = fields;
-exports.sync = sync;
+module.exports = Limiter;
 </code></pre>
         </article>
     </section>

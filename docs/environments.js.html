@@ -59,7 +59,7 @@
             <div class="column is-3" id="sidebarNav">
                 <div class="sidebar">
                     <nav>
-                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#request">request</a></li></ul></div>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-annotations.html">annotations</a></li><li><a href="module-audits.html">audits</a></li><li><a href="module-common.html">common</a></li><li><a href="module-deviceNames.html">deviceNames</a></li><li><a href="module-devices.html">devices</a></li><li><a href="module-deviceTypes.html">deviceTypes</a></li><li><a href="module-dictionary.html">dictionary</a></li><li><a href="module-dynamicTeams.html">dynamicTeams</a></li><li><a href="module-environments.html">environments</a></li><li><a href="module-events.html">events</a></li><li><a href="module-eventSuppressions.html">eventSuppressions</a></li><li><a href="module-forms.html">forms</a></li><li><a href="module-groupMembers.html">groupMembers</a></li><li><a href="module-groups.html">groups</a></li><li><a href="module-importJobs.html">importJobs</a></li><li><a href="module-integrations.html">integrations</a></li><li><a href="module-oauth.html">oauth</a></li><li><a href="module-onCalls.html">onCalls</a></li><li><a href="module-people.html">people</a></li><li><a href="module-planConstants.html">planConstants</a></li><li><a href="module-planEndpoints.html">planEndpoints</a></li><li><a href="module-planProperties.html">planProperties</a></li><li><a href="module-plans.html">plans</a></li><li><a href="module-roles.html">roles</a></li><li><a href="module-scenarios.html">scenarios</a></li><li><a href="module-sharedLibraries.html">sharedLibraries</a></li><li><a href="module-shifts.html">shifts</a></li><li><a href="module-sites.html">sites</a></li><li><a href="module-subscriptionForms.html">subscriptionForms</a></li><li><a href="module-subscriptions.html">subscriptions</a></li><li><a href="module-sync.html">sync</a></li><li><a href="module-temporaryAbsences.html">temporaryAbsences</a></li><li><a href="module-uploads.html">uploads</a></li><li><a href="module-util.html">util</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Limiter">Limiter</a></li><li><a href="global.html#request">request</a></li><li><a href="global.html#schedule">schedule</a></li></ul></div>
                     </nav>
                 </div>
             </div>
@@ -77,8 +77,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const Bottleneck = require('bottleneck');
-const util = require('./util');
+            <pre class="prettyprint source linenums"><code>const util = require('./util');
+const Limiter = require('./limiter');
 const fs = require('fs');
 
 /**
@@ -106,7 +106,7 @@ const fs = require('fs');
  *
  * @property {string} auth - A request auth object.
  * @property {string} baseUrl - The base url for the xMatters instance.
- * @property {string} limiter - a Bottleneck limiter for managing the concurrent
+ * @property {string} limiter - a task limiter for managing the concurrent
  * connections with xMatters.
  * @property {module:environments.Log} log The logging object used to write to the console at the set loglevel only.
  *
@@ -127,6 +127,8 @@ const fs = require('fs');
  * - 'warn': Errors and warnings.&lt;br>
  * - 'info': Errors, warnings, and information.&lt;br>
  * - 'debug': All console messages.&lt;br>
+ *
+ * @property {string} logPath The file path where processing output can be written. Output is always appended.
  *
  * @property {boolean} readOnly Whether or not writes and deletes are allowed in this environment.&lt;br>
  *&lt;br>
@@ -166,7 +168,7 @@ const fs = require('fs');
  * @category environments
  */
 function create(subdomain, user, pass, options = {}) {
-  const limiter = new Bottleneck({
+  const limiter = new Limiter({
     maxConcurrent: parseInt(process.env.MAX_CONCURRENT_CONNECTIONS || 5),
   });
 
@@ -195,6 +197,8 @@ function create(subdomain, user, pass, options = {}) {
   const logLevel = options.logLevel || 'error';
   const readOnly = options.readOnly || false;
   const proxy = options.proxy;
+  const logPath = options.logPath;
+  const logStream = fs.createWriteStream(logPath, { flags: 'a' });
 
   const output = [];
   const errors = [];
@@ -213,10 +217,13 @@ function create(subdomain, user, pass, options = {}) {
 
   if (typeof logIndex !== 'number') logIndex = 1;
 
+  const timestamp = () => '[' + new Date().toISOString() + '] ';
+
   const log = {
     error: function () {
       const args = Array.prototype.slice.call(arguments);
       const e = new Error(args);
+      if (logPath) logStream.write(timestamp() + e.toString() + '\n');
       errors.push(e);
       output.push(e.toString());
       logIndex >= 1 ? console.error.apply(null, arguments) : () => {};
@@ -224,13 +231,17 @@ function create(subdomain, user, pass, options = {}) {
     warn:
       logIndex >= 2
         ? function () {
-            output.push([].slice.call(arguments).join(' ')) &amp;&amp; console.warn.apply(null, arguments);
+            const msg = [].slice.call(arguments).join(' ');
+            if (logPath) logStream.write(timestamp() + msg + '\n');
+            output.push(msg) &amp;&amp; console.warn.apply(null, arguments);
           }
         : () => {},
     info:
       logIndex >= 3
         ? function () {
-            output.push([].slice.call(arguments).join(' ')) &amp;&amp; console.info.apply(null, arguments);
+            const msg = [].slice.call(arguments).join(' ');
+            if (logPath) logStream.write(timestamp() + msg + '\n');
+            output.push(msg) &amp;&amp; console.info.apply(null, arguments);
           }
         : () => {},
     time: logIndex >= 3 ? console.time : () => {},
@@ -238,13 +249,17 @@ function create(subdomain, user, pass, options = {}) {
     log:
       logIndex >= 4
         ? function () {
-            output.push([].slice.call(arguments).join(' ')) &amp;&amp; console.log.apply(null, arguments);
+            const msg = [].slice.call(arguments).join(' ');
+            if (logPath) logStream.write(timestamp() + msg + '\n');
+            output.push(msg) &amp;&amp; console.log.apply(null, arguments);
           }
         : () => {},
     debug:
       logIndex >= 4
         ? function () {
-            output.push([].slice.call(arguments).join(' ')) &amp;&amp; console.debug.apply(null, arguments);
+            const msg = [].slice.call(arguments).join(' ');
+            if (logPath) logStream.write(timestamp() + msg + '\n');
+            output.push(msg) &amp;&amp; console.debug.apply(null, arguments);
           }
         : () => {},
   };
@@ -281,7 +296,7 @@ exports.create = create;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Sun Dec 20 2020 20:04:20 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jan 11 2021 10:02:17 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
