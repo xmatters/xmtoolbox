@@ -141,7 +141,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line31">line 31</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line32">line 32</a>
             </span>
         </p>
     
@@ -366,7 +366,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line437">line 437</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line452">line 452</a>
             </span>
         </p>
     
@@ -492,7 +492,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line68">line 68</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line69">line 69</a>
             </span>
         </p>
     
@@ -616,7 +616,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line208">line 208</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line211">line 211</a>
             </span>
         </p>
     
@@ -684,7 +684,7 @@
         
         <span class="code-name">
             
-                ExtractData<span class="signature">(env, extractOptions, syncOptions)</span><span class="type-signature"> &rarr; {<a href="module-common.html#.xMattersData">module:common.xMattersData</a>}</span>
+                ExtractData<span class="signature">(env, extractOptions)</span><span class="type-signature"> &rarr; {<a href="module-common.html#.xMattersData">module:common.xMattersData</a>}</span>
             
         </span>
     </h4>
@@ -781,7 +781,7 @@
         
 <tr class="deep-level-0">
   
-      <td class="name"><code>syncOptions</code></td>
+      <td class="name"><code>syncOptions.</code></td>
   
 
   <td class="type">
@@ -797,7 +797,7 @@
 
   
 
-  <td class="description last"></td>
+  <td class="description last">This function only uses query type (e.g. peopleQuery) and singular object (e.g. person, group, etc.) syncOptions</td>
 </tr>
 
 
@@ -844,7 +844,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line659">line 659</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line682">line 682</a>
             </span>
         </p>
     
@@ -1072,7 +1072,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line647">line 647</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line670">line 670</a>
             </span>
         </p>
     
@@ -1275,7 +1275,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line304">line 304</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line309">line 309</a>
             </span>
         </p>
     
@@ -1501,7 +1501,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line403">line 403</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line408">line 408</a>
             </span>
         </p>
     
@@ -2508,7 +2508,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line37">line 37</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line38">line 38</a>
             </span>
         </p>
     
@@ -2572,43 +2572,6 @@
     </thead>
 
     <tbody>
-    
-        
-<tr class="deep-level-0">
-    
-        <td class="name"><code>sameAsSource</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            false
-        
-        </td>
-    
-
-    <td class="description last">Whether or not the data going into xMatters is from the same instance. This is useful to avoid unnecessary data lookups for UUIDs when modifying data in for a single xMatters instance.</td>
-</tr>
-
     
         
 <tr class="deep-level-0">
@@ -4501,6 +4464,78 @@
         
 <tr class="deep-level-0">
     
+        <td class="name"><code>subscriptionforms</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">boolean</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+            false
+        
+        </td>
+    
+
+    <td class="description last">Whether or not to synchronize subscription forms</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>subscriptionFormsFilter</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">function</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Array.filter(callback) function to apply to the subscription forms arrays from the source and destination after data is extracted.<br><br> Example: o => o.foo === 'bar'' //filters out all but the subscription form objects where the foo property is equal to 'bar'. <br><br> Refer to the javascript Array.filter() documentation for more information.</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
         <td class="name"><code>subscriptionFormsQuery</code></td>
     
 
@@ -5347,6 +5382,41 @@
     
 
     <td class="description last">Transforms each of the subscriptions objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.<br><br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}</td>
+</tr>
+
+    
+        
+<tr class="deep-level-0">
+    
+        <td class="name"><code>subscriptionFormsTransform</code></td>
+    
+
+    <td class="type">
+    
+        
+<span class="param-type">function</span>
+
+
+    
+    </td>
+
+    
+        <td class="attributes">
+        
+            &lt;optional><br>
+        
+
+        
+        </td>
+    
+
+    
+        <td class="default">
+        
+        </td>
+    
+
+    <td class="description last">Transforms each of the subscription forms objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.<br><br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}</td>
 </tr>
 
     
@@ -6230,7 +6300,7 @@
         <p class="tag-source">
             <a href="sync.js.html" class="button">View Source</a>
             <span>
-                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line96">line 96</a>
+                <a href="sync.js.html">sync.js</a>, <a href="sync.js.html#line97">line 97</a>
             </span>
         </p>
     
@@ -6262,7 +6332,7 @@
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jan 11 2021 10:02:17 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Tue Jan 26 2021 16:28:11 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

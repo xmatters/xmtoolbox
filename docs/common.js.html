@@ -78,7 +78,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>const _request = require('./request');
-const _ = require('lodash');
+const util = require('./util');
 //prevent ETIMEDOUT error from connections.
 process.env.UV_THREADPOOL_SIZE = 128; //https://stackoverflow.com/questions/24320578/node-js-get-request-etimedout-esockettimedout/37946324#37946324
 
@@ -544,7 +544,7 @@ async function syncObject(
   const continueOnError = options.continueOnError;
 
   const defaults = getNullDefaults(fields); //Create empty null object for synced fields to remove values from destination when not included in source.
-  //const defaults = _.defaultsDeep(options.defaults, getNullDefaults(fields)); //Create empty null object for synced fields to remove values from destination when not included in source.
+  //const defaults = util.defaultsDeep(options.defaults, getNullDefaults(fields)); //Create empty null object for synced fields to remove values from destination when not included in source.
 
   const pendingDelete = [];
   const deleted = [];
@@ -558,27 +558,25 @@ async function syncObject(
       const parentId = sourceObject[parentKey];
 
       //loop for a match according to the synced fields.
-      const matchTarget = _.pick(sourceObject, syncFields);
-      const match = _.find(destinationObjects, matchTarget);
+      const matchTarget = util.pick(sourceObject, syncFields);
+      const match = util.find(destinationObjects, matchTarget);
+      const __match = util.find(destinationObjects, matchTarget);
+
+      const sourceObjectProps = util.pick(sourceObject, fields);
 
       if (match) {
         //if match update.
-
-        delete sourceObject.default;
-        const sourceObjectProps = _.pick(sourceObject, fields);
-        const destObjectProps = _.pick(match, fields);
-        if (_.isMatch(destObjectProps, sourceObjectProps)) {
+        const destObjectProps = util.pick(match, fields);
+        if (util.isMatch(destObjectProps, sourceObjectProps)) {
           destination.log.info(`SYNC: Skip ${name} (match):`, match[syncFields[0]]);
           matched.push(match);
           return sourceObject;
         } else {
-          const diff = _.reduce(
-            destObjectProps,
-            (result, value, key) => (_.isEqual(value, sourceObjectProps[key]) ? result : result.concat(key)),
-            []
+          const diff = Object.keys(destObjectProps).filter(
+            key => !util.isEqual(destObjectProps[key], sourceObjectProps[key])
           );
 
-          const update = _.defaults(sourceObjectProps, defaults);
+          const update = util.defaults(sourceObjectProps, defaults);
           destination.log.info(
             `SYNC: Update ${name}:`,
             match[syncFields[0]],
@@ -619,14 +617,14 @@ async function syncObject(
         }
       } else {
         //if not match create object
-        destination.log.info(`SYNC: Create ${name}:`, sourceObject[syncFields[0]]);
-        omit(sourceObject, 'links');
+        destination.log.info(`SYNC: Create ${name}:`, sourceObjectProps[syncFields[0]]);
+        omit(sourceObjectProps, 'links');
 
         //apply defaults, if set.
         //Default will set keys if not already set.
-        //Initial will set regardless of prior value.
-        let record = _.defaults(sourceObject, sourceObject.default);
-        record = _.defaults(sourceObject.initial, sourceObject);
+        //Initial will set regardless of record value.
+        let record = util.defaults(sourceObjectProps, sourceObject.default);
+        record = util.defaults(sourceObject.initial, record);
         delete record.default;
         delete record.initial;
 
@@ -639,7 +637,7 @@ async function syncObject(
           if (!continueOnError) throw error;
         }
 
-        return sourceObject;
+        return record;
       }
     })
   );
@@ -648,7 +646,7 @@ async function syncObject(
   if (mirror) {
     await Promise.all(
       destinationObjects.map(async destinationObject => {
-        const match = _.find(sourceObjects, _.pick(destinationObject, syncFields));
+        const match = util.find(sourceObjects, util.pick(destinationObject, syncFields));
         if (!match) {
           destination.log.info(
             `SYNC: Remove ${name} (mirror mode):`,
@@ -683,23 +681,25 @@ async function syncObject(
  *
  * @param {Object} childsParent The Object that represents the current child's parent.
  * @param {Object[]} destinationParents An array of the parent objects to find a match.
- * @param {String} matchField The key name from the child that represents the parent.
- * @returns {string} child's parent id or matchField id if not available.
+ * @param {String} matchId The key name from the child that represents the parent.
+ * @param {String[]} fields additional fields to match on.
+ * @returns {string} child's parent id or matchId id if not available.
  */
-function AssignParentObject(childsParent, destinationParents, matchField) {
-  if (childsParent) {
+function AssignParentObject(childsParent, destinationParents, matchId, fields = []) {
+  if (childsParent &amp;&amp; matchId &amp;&amp; destinationParents) {
     //
-    if (childsParent[matchField]) {
-      childsParent = childsParent[matchField];
-    }
+    const matchTo = util.pick(childsParent, fields.concat([matchId]));
+
     //attempt to find a matching group and use it's id
     if (destinationParents) {
-      const destinationParent = destinationParents.find(parent => parent[matchField] === childsParent);
-      if (destinationParent &amp;&amp; destinationParent.id) childsParent = destinationParent.id;
+      const destinationParent = destinationParents.find(parent => util.isMatch(parent, matchTo));
+      if (destinationParent &amp;&amp; destinationParent.id) {
+        return destinationParent.id;
+      }
     }
   }
 
-  return childsParent;
+  return childsParent.id;
 }
 
 /**
@@ -708,12 +708,11 @@ function AssignParentObject(childsParent, destinationParents, matchField) {
  * @returns {Object} Returns an array of null value keys where the keys match the fields.
  */
 function getNullDefaults(fields) {
-  return _(fields)
-    .mapKeys()
-    .mapValues(function () {
-      return null;
-    })
-    .value();
+  const object = {};
+  if (Array.isArray(fields)) {
+    fields.forEach(field => (object[field] = null));
+  }
+  return object;
 }
 
 function convertDefaultInitial(objects, convert) {
@@ -752,7 +751,7 @@ module.exports = {
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jan 11 2021 10:02:17 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Tue Jan 26 2021 16:28:11 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

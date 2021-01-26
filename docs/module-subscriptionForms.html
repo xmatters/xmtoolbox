@@ -186,11 +186,524 @@
     
 
     
+        <div class='vertical-section'>
+            <h3 class="title"><span>Members</span></h3>
+            <div class="members">
+            
+                <div class="member">
+
+<h4 class="name" id="~fields">
+    <a class="href-link" href="#~fields">#</a>
+    
+        
+            <span class='tag'>inner</span>
+        
+            <span class='tag'>constant</span>
+        
+    
+    <span class="code-name">
+        fields
+    </span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    The key values from the object that can be synchronized.
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="subscriptionForms.js.html" class="button">View Source</a>
+            <span>
+                <a href="subscriptionForms.js.html">subscriptionForms.js</a>, <a href="subscriptionForms.js.html#line176">line 176</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
 
     
         <div class='vertical-section'>
             <h3 class="title"><span>Methods</span></h3>
             <div class="members">
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~create">
+        <a class="href-link" href="#~create">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                create<span class="signature">(env, subscriptionForm, planId)</span><span class="type-signature"> &rarr; {Promise.&lt;Site>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Create a subscription form in xMatters<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#create-a-subscription-form">https://help.xmatters.com/xmapi/index.html#create-a-subscription-form</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subscriptionForm</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">SubscriptionForm</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><a href="https://help.xmatters.com/xmapi/index.html#subscription-form-objects">https://help.xmatters.com/xmapi/index.html#subscription-form-objects</a></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>planId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The UUID of the communication plan that is associated with the integration.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="subscriptionForms.js.html" class="button">View Source</a>
+            <span>
+                <a href="subscriptionForms.js.html">subscriptionForms.js</a>, <a href="subscriptionForms.js.html#line71">line 71</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Site Object Created</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Site></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~exportToImport">
+        <a class="href-link" href="#~exportToImport">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                exportToImport<span class="signature">(destination, subscriptionForms)</span><span class="type-signature"> &rarr; {Promise}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Transforms an array of records exported from xMatters to the format needed to import into xMatters.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destination</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of the target or destination xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subscriptionForms</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;SubscriptionForm></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">Array of subscription form objects to transform.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="subscriptionForms.js.html" class="button">View Source</a>
+            <span>
+                <a href="subscriptionForms.js.html">subscriptionForms.js</a>, <a href="subscriptionForms.js.html#line110">line 110</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise</span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
             
                 <div class="member">
 
@@ -862,6 +1375,491 @@ Examples:<br>
 
 </div>
             
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~sync">
+        <a class="href-link" href="#~sync">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                sync<span class="signature">(destination, sourceSubscriptionForms, destinationSubscriptionForm, options)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Synchronizes an array of objects from a source with destination objects and updates the destination as necessary.
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destination</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of the target or destination xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>sourceSubscriptionForms</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;SubscriptionForm></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">An array of the  subscription form objects to synchronize from the source data.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>destinationSubscriptionForm</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;SubscriptionForm></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">An array of the subscription form objects to synchronize from the destination data.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Object</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"></td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="subscriptionForms.js.html" class="button">View Source</a>
+            <span>
+                <a href="subscriptionForms.js.html">subscriptionForms.js</a>, <a href="subscriptionForms.js.html#line199">line 199</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="~update">
+        <a class="href-link" href="#~update">#</a>
+        
+            
+                <span class='tag'>async</span>
+            
+                <span class='tag'>inner</span>
+            
+        
+        <span class="code-name">
+            
+                update<span class="signature">(env, integration, subscriptionFormId, planId)</span><span class="type-signature"> &rarr; {Promise.&lt;Integration>}</span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        Update an subscription form in xMatters<br><br>
+
+<a href="https://help.xmatters.com/xmapi/index.html#modify-a-subscription-form">https://help.xmatters.com/xmapi/index.html#modify-a-subscription-form</a>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>env</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="module-environments.html#.xMattersEnvironment">module:environments.xMattersEnvironment</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The xmtoolbox representation of an xMatters instance.</td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>integration</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><a href="https://help.xmatters.com/xmapi/index.html#subscription-form-objects">https://help.xmatters.com/xmapi/index.html#subscription-form-objects</a></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>subscriptionFormId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The unique identifier (id) of the subscription form you want to modify.<br><br>
+Examples:<br>
+- 345c95ee-4abe-47ea-ae7c-ae84fb4bee4f<br></td>
+</tr>
+
+
+    
+
+        
+<tr class="deep-level-0">
+  
+      <td class="name"><code>planId</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">*</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last">The UUID of the communication plan that is associated with the integration.</td>
+</tr>
+
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="subscriptionForms.js.html" class="button">View Source</a>
+            <span>
+                <a href="subscriptionForms.js.html">subscriptionForms.js</a>, <a href="subscriptionForms.js.html#line94">line 94</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class='columns method-parameter'>
+        <div class="column is-2"><label>Returns:</label></div>
+        <div class="column is-10">
+            
+                    
+
+<div class="columns">
+    
+    <div class='param-desc column is-7'>Integration Object Updated</div>
+    
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
+        
+<span class="param-type">Promise.&lt;Integration></span>
+
+
+    </div>
+    
+</div>
+
+                
+        </div>
+    </div>
+
+
+
+
+</div>
+            
             </div>
         </div>
     
@@ -884,7 +1882,7 @@ Examples:<br>
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jan 11 2021 10:02:17 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Tue Jan 26 2021 16:28:11 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

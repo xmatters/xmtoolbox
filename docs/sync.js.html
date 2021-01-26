@@ -77,14 +77,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const _ = require('lodash');
-const xm = {
+            <pre class="prettyprint source linenums"><code>const xm = {
   audits: require('./audits'),
   dictionary: require('./dictionary'),
   devices: require('./devices'),
   deviceNames: require('./deviceNames'),
   deviceTypes: require('./deviceTypes'),
   dynamicTeams: require('./dynamicTeams'),
+  environments: require('./environments'),
   events: require('./events'),
   forms: require('./forms'),
   groups: require('./groups'),
@@ -104,6 +104,7 @@ const xm = {
   sites: require('./sites'),
   subscriptionForms: require('./subscriptionForms'),
   subscriptions: require('./subscriptions'),
+  util: require('./util'),
   temporaryAbsences: require('./temporaryAbsences'),
 };
 
@@ -176,7 +177,6 @@ function DefaultExtractOptions() {
  * @typedef SyncOptions
  * @type {Object}
  *
- * @property {boolean} [sameAsSource=false] Whether or not the data going into xMatters is from the same instance. This is useful to avoid unnecessary data lookups for UUIDs when modifying data in for a single xMatters instance.
  * @property {boolean} [forms=false, not yet supported] Whether or not to synchronize forms
  * @property {function} [formsFilter=undefined] Array.filter(callback) function to apply to the forms arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the form objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
  * @property {Object} [formsQuery={ embed: 'recipients' }, //possible to include ',scenarios' but simpler to extract scenarios separately] Object representation of the query parameters supported by the Get many API request for forms
@@ -229,6 +229,8 @@ function DefaultExtractOptions() {
  * @property {boolean} [sites=false] Whether or not to synchronize sites
  * @property {function} [sitesFilter=undefined] Array.filter(callback) function to apply to the sites arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the site objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
  * @property {Object} [sitesQuery={}] Object representation of the query parameters supported by the Get many API request for sites
+ * @property {boolean} [subscriptionforms=false] Whether or not to synchronize subscription forms
+ * @property {function} [subscriptionFormsFilter=undefined] Array.filter(callback) function to apply to the subscription forms arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the subscription form objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
  * @property {Object} [subscriptionFormsQuery={ embed: 'deviceNames,propertyDefinitions,roles' }] Object representation of the query parameters supported by the Get many API request for subscriptionForms
  * @property {boolean} [subscriptions=false] Whether or not to synchronize subscriptions
  * @property {function} [subscriptionsFilter=undefined] Array.filter(callback) function to apply to the subscriptions arrays from the source and destination after data is extracted.&lt;br>&lt;br> Example: o => o.foo === 'bar'' //filters out all but the subscription objects where the foo property is equal to 'bar'. &lt;br>&lt;br> Refer to the javascript Array.filter() documentation for more information.
@@ -253,6 +255,7 @@ function DefaultExtractOptions() {
  * @property {function} [integrationsTransform=undefined] Transforms each of the integrations objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.&lt;br>&lt;br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}
  * @property {function} [scenariosTransform=undefined] Transforms each of the scenarios objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.&lt;br>&lt;br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}
  * @property {function} [subscriptionsTransform=undefined] Transforms each of the subscriptions objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.&lt;br>&lt;br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}
+ * @property {function} [subscriptionFormsTransform=undefined] Transforms each of the subscription forms objects. Return the object after transform. Transformation is performed on the raw source object before filtered, converted for export, or synchronized. You have full access to the source data and destination data to perform operations such as mapping.&lt;br>&lt;br> Example: (o, sourceData, destinationData) => {o.foo = 'bar'; return o;}
  * @property {module:common.SyncOptions} [sitesOptions= { fields, mirror, delayRemoval })] Individual sync options for sites. By default fields property is set to sites.fields(), mirror uses the global options value.
  * @property {module:common.SyncOptions} [peopleOptions= { fields, mirror, delayRemoval, fields: peopleFields })] Individual sync options for people. By default fields property is set to people.fields(), mirror uses the global options value.
  * @property {module:common.SyncOptions} [devicesOptions= { fields, mirror, delayRemoval: false })] Individual sync options for devices. By default fields property is set to devices.fields(), mirror uses the global options value.
@@ -364,7 +367,9 @@ function DefaultSyncOptions() {
     subscriptionsQuery: {},
     subscriptionsFilter: undefined,
 
+    subscriptionForms: false,
     subscriptionFormsQuery: { embed: 'deviceNames,propertyDefinitions,roles' },
+    subscriptionFormsFilter: undefined,
 
     temporaryAbsences: false,
     temporaryAbsencesQuery: {},
@@ -480,16 +485,26 @@ async function UserUploadToImport(json, env) {
  * @returns {Object} destinationData An object representing the destination including data and sync results.
  */
 async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
-  const { mirror, dataExtracted } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
+  const { mirror, dataExtracted } = xm.util.defaultsDeep(syncOptions, DefaultSyncOptions());
+  let sameEnvironment = sourceEnv === destinationEnv;
+  if (sameEnvironment)
+    console.log(
+      'The source and destination environments are the same. Related data will not be queried unnecessarily and subsequently mapping warnings may exists. Mapping is not necessary when same environment is used.'
+    );
 
   //start sync
   destinationEnv.log.time('SYNC');
 
   //get the list(object) of needed data from each instance and extract the data
-  const [sourceData, destinationData] = await Promise.all([
-    ExtractData(sourceEnv, GetExtractOptions(syncOptions), syncOptions),
-    ExtractData(destinationEnv, GetExtractOptions(syncOptions, true), syncOptions),
+  let [sourceData, destinationData] = await Promise.all([
+    !sameEnvironment &amp;&amp; ExtractData(sourceEnv, GetExtractOptions(syncOptions), syncOptions),
+    ExtractData(destinationEnv, GetExtractOptions(syncOptions, !sameEnvironment), syncOptions),
   ]);
+
+  if (sameEnvironment) {
+    sourceData = JSON.parse(JSON.stringify(destinationData));
+    sourceEnv = xm.environments.copy(destinationEnv);
+  }
 
   if (dataExtracted) {
     dataExtracted(destinationData, destinationEnv, sourceData, sourceEnv);
@@ -515,9 +530,8 @@ async function xMattersToxMatters(sourceEnv, destinationEnv, syncOptions = {}) {
  */
 async function DataToxMatters(sourceData, destinationEnv, syncOptions = {}) {
   //set options and defaults.
-  const { mirror } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
-  const { sameAsSource, dataExtracted } = syncOptions;
-  const isDestination = sameAsSource ? false : true;
+  const { mirror } = xm.util.defaultsDeep(syncOptions, DefaultSyncOptions());
+  const { dataExtracted } = syncOptions;
 
   //start sync
   destinationEnv.log.time('SYNC');
@@ -525,7 +539,7 @@ async function DataToxMatters(sourceData, destinationEnv, syncOptions = {}) {
   //get the list(object) of needed data from each instance and extract the data
   const destinationData = await ExtractData(
     destinationEnv,
-    GetExtractOptions(syncOptions, isDestination),
+    GetExtractOptions(syncOptions, true),
     syncOptions
   );
 
@@ -573,7 +587,8 @@ function GetExtractOptions(syncOptions, isDestination) {
     scenarios,
     sharedLibraries,
     subscriptions,
-  } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
+    subscriptionForms,
+  } = xm.util.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   const get = {};
 
@@ -708,6 +723,14 @@ function GetExtractOptions(syncOptions, isDestination) {
     }
   }
 
+  if (subscriptionForms) {
+    get.subscriptionForms = true;
+    get.plans = true;
+    if (isDestination) {
+      get.forms = true;
+    }
+  }
+
   if (sharedLibraries) {
     get.plans = true;
     get.sharedLibraries = true;
@@ -732,7 +755,7 @@ async function GetSyncData(env, syncOptions, isDestination) {
  * Extracts data from an xMatters environment according to the options.
  * @param {module:environments.xMattersEnvironment} env The xmtoolbox representation of an xMatters instance
  * @param {module:sync.ExtractOptions} extractOptions
- * @param {SyncOptions} syncOptions
+ * @param {SyncOptions} syncOptions. This function only uses query type (e.g. peopleQuery) and singular object (e.g. person, group, etc.) syncOptions
  * @returns {module:common.xMattersData} xMatters Data Object
  */
 async function ExtractData(env, extractOptions, syncOptions) {
@@ -763,7 +786,7 @@ async function ExtractData(env, extractOptions, syncOptions) {
     person,
     plan,
     site,
-  } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
+  } = xm.util.defaultsDeep(syncOptions, DefaultSyncOptions());
 
   const data = {};
 
@@ -813,12 +836,13 @@ async function ExtractData(env, extractOptions, syncOptions) {
     } else {
       data.plans = await xm.plans.getMany(env, plansQuery);
     }
+    data.plans = data.plans.filter(plan => plan.planType !== 'RESERVED'); //exclude internal plans being returned.
   }
 
   if (extractOptions.forms &amp;&amp; data.plans) {
     const plansForms = await Promise.all(
       data.plans.map(async ({ id }) => {
-        return xm.forms.getManyInPlan(env, formsQuery, id);
+        return await xm.forms.getManyInPlan(env, formsQuery, id);
       })
     );
 
@@ -1069,7 +1093,17 @@ async function ExtractData(env, extractOptions, syncOptions) {
     }
   }
 
-  if (extractOptions.subscriptionForms) {
+  if (extractOptions.subscriptionForms &amp;&amp; data.plans) {
+    const plansSubscriptionForms = await Promise.all(
+      data.plans.map(async ({ id }) => {
+        return xm.subscriptionForms.getManyInPlan(env, subscriptionFormsQuery, id);
+      })
+    );
+
+    if (!data.subscriptionForms) data.subscriptionForms = [];
+    plansSubscriptionForms.map(
+      planSubscriptionForms => (data.subscriptionForms = data.subscriptionForms.concat(planSubscriptionForms))
+    );
     data.subscriptionForms = await xm.subscriptionForms.getMany(env, subscriptionFormsQuery);
   }
 
@@ -1229,6 +1263,10 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     integrationsOptions,
     sharedLibraries,
     subscriptions,
+    subscriptionForms,
+    subscriptionFormsFilter,
+    subscriptionFormsOptions,
+    subscriptionFormsTransform,
     plansFilter,
     plansTransform,
     plansOptions,
@@ -1251,67 +1289,81 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     subscriptionsTransform,
     subscriptionsOptions,
     continueOnError,
-  } = _.defaultsDeep(syncOptions, DefaultSyncOptions());
+  } = xm.util.defaultsDeep(syncOptions, DefaultSyncOptions());
 
-  const _sitesOptions = _.defaultsDeep(sitesOptions, { mirror, delayRemoval, continueOnError });
-  const _peopleOptions = _.defaultsDeep(peopleOptions, { mirror, delayRemoval, continueOnError });
-  const _devicesOptions = _.defaultsDeep(devicesOptions, { mirror, delayRemoval: false, continueOnError });
-  const _groupMembersOptions = _.defaultsDeep(groupMembersOptions, {
+  const _sitesOptions = xm.util.defaultsDeep(sitesOptions, { mirror, delayRemoval, continueOnError });
+  const _peopleOptions = xm.util.defaultsDeep(peopleOptions, { mirror, delayRemoval, continueOnError });
+  const _devicesOptions = xm.util.defaultsDeep(devicesOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _groupsOptions = _.defaultsDeep(groupsOptions, {
+  const _groupMembersOptions = xm.util.defaultsDeep(groupMembersOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _groupsOptions = xm.util.defaultsDeep(groupsOptions, {
     mirror,
     delayRemoval,
     defaultSupervisorId,
     deleteShiftsOnCreate: true,
     continueOnError,
   });
-  const _shiftsOptions = _.defaultsDeep(shiftsOptions, { mirror, delayRemoval: false, continueOnError });
-  const _dynamicTeamsOptions = _.defaultsDeep(dynamicTeamsOptions, {
+  const _shiftsOptions = xm.util.defaultsDeep(shiftsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+  const _dynamicTeamsOptions = xm.util.defaultsDeep(dynamicTeamsOptions, {
     mirror,
     delayRemoval,
     defaultSupervisorId,
     continueOnError,
   });
-  const _temporaryAbsencesOptions = _.defaultsDeep(temporaryAbsencesOptions, {
+  const _temporaryAbsencesOptions = xm.util.defaultsDeep(temporaryAbsencesOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _integrationsOptions = _.defaultsDeep(integrationsOptions, {
+  const _integrationsOptions = xm.util.defaultsDeep(integrationsOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _plansOptions = _.defaultsDeep(plansOptions, { mirror, delayRemoval: false, continueOnError });
-  const _planConstantsOptions = _.defaultsDeep(planConstantsOptions, {
+  const _plansOptions = xm.util.defaultsDeep(plansOptions, { mirror, delayRemoval: false, continueOnError });
+  const _planConstantsOptions = xm.util.defaultsDeep(planConstantsOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _planEndpointsOptions = _.defaultsDeep(planEndpointsOptions, {
+  const _planEndpointsOptions = xm.util.defaultsDeep(planEndpointsOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _planPropertiesOptions = _.defaultsDeep(planPropertiesOptions, {
+  const _planPropertiesOptions = xm.util.defaultsDeep(planPropertiesOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _sharedLibrariesOptions = _.defaultsDeep(sharedLibrariesOptions, {
+  const _sharedLibrariesOptions = xm.util.defaultsDeep(sharedLibrariesOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _scenariosOptions = _.defaultsDeep(scenariosOptions, {
+  const _scenariosOptions = xm.util.defaultsDeep(scenariosOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
   });
-  const _subscriptionsOptions = _.defaultsDeep(subscriptionsOptions, {
+  const _subscriptionsOptions = xm.util.defaultsDeep(subscriptionsOptions, {
+    mirror,
+    delayRemoval: false,
+    continueOnError,
+  });
+
+  const _subscriptionFormsOptions = xm.util.defaultsDeep(subscriptionFormsOptions, {
     mirror,
     delayRemoval: false,
     continueOnError,
@@ -1346,6 +1398,13 @@ async function ConvertAndSyncObjects(sourceData, destinationData, env, syncOptio
     ],
     [integrations, 'integrations', integrationsFilter, integrationsTransform, _integrationsOptions],
     [scenarios, 'scenarios', scenariosFilter, scenariosTransform, _scenariosOptions],
+    [
+      subscriptionForms,
+      'subscriptionForms',
+      subscriptionFormsFilter,
+      subscriptionFormsTransform,
+      _subscriptionFormsOptions,
+    ],
     [subscriptions, 'subscriptions', subscriptionsFilter, subscriptionsTransform, _subscriptionsOptions],
   ];
 
@@ -1399,7 +1458,7 @@ async function MirrorOrderedDelete(env, syncResults, syncOptions) {
 
   //name of the objects to delete from, in order.
   const objectNames = ['groups', 'dynamicTeams', 'people', 'sites'];
-  const {continueOnError} = syncOptions
+  const { continueOnError } = syncOptions;
 
   await Promise.all(
     objectNames.map(async objectName => {
@@ -1411,14 +1470,13 @@ async function MirrorOrderedDelete(env, syncResults, syncOptions) {
         await Promise.all(
           syncResults[objectName].remove.map(async object => {
             try {
-                const result = await xm[objectName].delete(env, object.id)
-                syncResults[objectName].deleted.push(result);
-              } catch (error) {
-                env.log.error(error);
-                syncResults[objectName].errors.push({ operation: 'delete', error, object });
-                if (!continueOnError) throw error;
-              }
-
+              const result = await xm[objectName].delete(env, object.id);
+              syncResults[objectName].deleted.push(result);
+            } catch (error) {
+              env.log.error(error);
+              syncResults[objectName].errors.push({ operation: 'delete', error, object });
+              if (!continueOnError) throw error;
+            }
           })
         );
       }
@@ -1448,7 +1506,7 @@ exports.DefaultExtractOptions = DefaultExtractOptions;
 
 <footer class="footer">
     <div class="content has-text-centered">
-        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon Jan 11 2021 10:02:17 GMT-0500 (Eastern Standard Time)</p>
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Tue Jan 26 2021 16:28:11 GMT-0500 (Eastern Standard Time)</p>
         <p class="sidebar-created-by">
             <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
             <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>

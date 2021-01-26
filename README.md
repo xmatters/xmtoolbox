@@ -164,7 +164,7 @@ Object as defined by xMatters (caveats)
 - Shifts
 - Sites
 - Subscriptions
-- Subscription Forms
+- Subscription Forms (delete not available)
 - Temporary Absences (Warning: These generate notifications when created)
 - Workflow HTTP Trigger
 
