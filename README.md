@@ -163,7 +163,8 @@ Object as defined by xMatters (caveats)
 - Shared Libraries
 - Shifts
 - Sites
-- Subscriptions (supporting subscription forms need to be manually created and maintained)
+- Subscriptions
+- Subscription Forms
 - Temporary Absences (Warning: These generate notifications when created)
 - Workflow HTTP Trigger
 
