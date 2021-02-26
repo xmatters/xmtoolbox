@@ -5,6 +5,9 @@
  * @module index
  */
 
+//prevent ETIMEDOUT error from connections.
+process.env.UV_THREADPOOL_SIZE = 128; //https://stackoverflow.com/questions/24320578/node-js-get-request-etimedout-esockettimedout/37946324#37946324
+
 exports.annotations = require('./lib/annotations');
 exports.audits = require('./lib/audits');
 //exports.convert = require('./lib/convert');
