@@ -11,4 +11,4 @@ test.js
 jsdoc.json
 TODO.txt
 #xmtoolbox encrypted password files
-.xmpw
+*.xmpw

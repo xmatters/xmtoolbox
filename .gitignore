@@ -9,4 +9,4 @@ app.js
 test.js
 TODO.txt
 #xmtoolbox encrypted password files
-.xmpw
+*.xmpw
