@@ -1,45 +1,70 @@
 # xmtoolbox
 
-The xmtoolbox is a promise based node package to simplify the interaction with xMatters using the REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
+The xmtoolbox is a easy to use, zero dependency, promise based node package to simplify the interaction with xMatters using the xMatters REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
 
-Please have a look at the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start) for a full working node app.
+All Issues and Questions: [https://github.com/brannonvann/xmtoolbox/issues](https://github.com/brannonvann/xmtoolbox/issues)
 
-<aside class="notice">
-Please report any issues/questions to: https://github.com/brannonvann/xmtoolbox/issues
-</aside>
+Working examples: [https://github.com/brannonvann/xmtoolbox-quick-start](https://github.com/brannonvann/xmtoolbox-quick-start)
 
-## Simple To Use
+xmtoolbox documentation: [https://brannonvann.github.io/xmtoolbox/](https://brannonvann.github.io/xmtoolbox/)
 
-xmtoolbox is designed to simplify the interactions with the xMatters APIs and includes other helper functions for synchronizations from a file and between xMatters instances for backup and restoration of xMatters data.
+xmtoolbox node package: [https://www.npmjs.com/package/xmtoolbox](https://www.npmjs.com/package/xmtoolbox)
 
-    //returns person with targetName jsmith
-    const jsmith = await xm.people.get(np, 'jsmith')
-
-    //gets group with group named MIM
-    const MIM = await xm.groups.get(np, 'MIM')
+If you are new to node.js see the [Getting Started](#getting-started) section.
 
 ## Installation
 
     npm install xmtoolbox --save
 
-## Setup
+## Getting Started
 
-1.  Create user with 'Web Service User Role` for each xMatters Instance
-2.  Follow Examples to leverage package.
-3.  Setup an xMatters environment for each instance you are interacting with. This is an example of one:
+The following instructions get you started without an existing node.js project and will get all groups from xMatters. See the examples in [xmtoolbox-quick-start](https://github.com/brannonvann/xmtoolbox-quick-start) for more examples.
 
-        const xm = require('../xmtoolbox');
+1.  Install Node from <https://nodejs.org>. Install the latest Long Term Support(LTS) release.
+1.  In terminal/command prompt, create new node project using the command `npm init` and follow prompts. The defaults are sufficient for getting started.
+1.  In terminal/command prompt, install xmtoolbox using the command `npm install xmtoolbox --save`.
+1.  Create a user in xMatters or add an an API key to an existing one. The user must have the role `Web Service User Role`. See the [user](#user) and [password](#password) sections for more information.
+1.  Create a new file in this directory called `example.js` and place the contents below in that file. Replace the placeholders for [subdomain](#subdomain), [username](#user), and [password](#password) with your details.
 
-        //xMatters username and password stored as environment variables.
-        const SUBDOMAIN = process.env.SUBDOMAIN; // https://SUBDOMAIN.xmatters.com
-        const USERNAME = process.env.USERNAME;
-        const PASSWORD = process.env.PASSWORD;
+    ```javascript
+    const xm = require('../xmtoolbox');
 
-        //options doc: https://brannonvann.github.io/xmtoolbox/module-environments.html#.EnvironmentOptions
-        const options = {logLevel: 'debug', readOnly: false};
+    const np = xm.environments.create('subdomain', 'username', 'password');
 
-        //create non-production xMatters environment
-        const np = xm.environments.create(SUBDOMAIN, USERNAME, PASSWORD, options);
+    main();
+
+    async function main() {
+      const groups = await xm.groups.getMany(np);
+      console.log(JSON.stringify(groups, null, 2));
+    }
+    ```
+
+1.  In terminal/command prompt, run the example.js using the command `node example.js`
+
+#### Subdomain
+
+The xMatters subdomain is needed so that xmtoolbox know which xMatters environment it is interacting with. If your xMatters url is https://company.xmatters.com, your subdomain is company.
+
+#### User
+
+The xmtoolbox needs an xMatters user to make api requests using the xMatters API. The user must have the 'Web Services User Role' role. When creating an xmtoolbox environment you may specific the user as the actual user's username or an [API Key](https://help.xmatters.com/ondemand/user/apikeys.htm) created with that user.
+
+### Password
+
+To support a variety of deployments and situations, xmtoolbox supports many methods of specifying the password or API key that is used to authenticate the [user](#user). The password may be the xMatters user password, api key secret, or an xmtoolbox encryption key if the .xmpw file has been defined. The password can also be `undefined` if the encryption key is specified in the environment variable specified when creating the .xmpw file. To encrypt the password and create a .xmpw file, see [Encrypted Password](#encrypted-password) If this encryption method is not desirable you may implement any encryption or security mechanism desirable as long as the string form of the password or API key is supplied when creating the xmtoolbox environment.
+
+### Encrypted Password
+
+A xmtoolbox .xmpw file is an aes-256-gcm encrypted file that contains your xMatters password or API Key secret for each xMatters instance. A 32 character key is used to encrypt the file and must be provided to xmtoolbox via the password field or environment variable that is provided after following the instructions below.
+
+To create encrypted xmtoolbox .xmpw file to store your password in encrypted format for each xMatters instance.
+
+1. Run `npx create-xmpw` from this project directory.
+1. Provide your xMatters subdomain. ex: company if your url is company.xmatters.com.
+1. Provide your xMatters password or API key secret for the user or API key you will use.
+1. Provide your 32 character key. Keys longer than 32 characters are truncated.
+
+After following the steps above, the file is written to project directory with a name similar to the subdomain with extension `.xmpw`. The key may be provided in the password field or the environment variable given in the output after following the steps above.
 
 ## Warning
 
@@ -108,10 +133,6 @@ To improve readability, `xm` is a reference to this package. `np` and `prod` in 
             await xm.sync.DataToxMatters(JSON.parse(text), np, syncOptions);
         })();
 
-## API
-
-The API documentation is available at [https://brannonvann.github.io/xmtoolbox/index.html](https://brannonvann.github.io/xmtoolbox/index.html).
-
 ## Supported Data
 
 This lists below refer to xMatters objects as defined in the xMatters REST API documentation.
@@ -173,4 +194,14 @@ Object as defined by xMatters (caveats)
 - Create Plan doesn't support loggingLevel but update does. For synchronizations this means there will be an update the second time the sync is run to update the loggingLevel if the logging level is different in the source than the default.
 - Creating and Updating xMatters Type endpoints in communication plans is not supported via API. They exist in every plan but require configuration in the UI to set the authenticating user.
 - Syncing any communication plan related data such as the plans, forms, scenarios, plan properties, plan constants, plan endpoints, shared libraries, or integrations require that the rest user have edit access for the communication plan(s). One way to accomplish this is to add the Rest Web Services Role to each of the communication plans. The specific user can also be added rather than the entire role.
-- Form APIs do not exist to allow the updating and deleting comm plan forms and therefore they cannot be synced. Scenarios depend on forms. If scenarios are synchronized the forms must be created independently of the sync with the same properties in the form layout.
+- Form APIs do not exist to allow the updating and deleting communication plan forms and therefore they cannot be synced.
+
+## Compatibility
+
+### Node
+
+xmtoobox is supported on many version of Node.js however the latest Long Term Support(LTS) version of [node.js](https://nodejs.org) is recommended.
+
+### Operating Systems
+
+xmtoolbox is supported on Linux, macOS, and Windows operating systems.
