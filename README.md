@@ -74,7 +74,7 @@ This package has the ability to modify data within xMatters for good and bad. Pl
 
 Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start).
 
-To improve readability, `xm` is a reference to this package. `np` and `prod` in the below examples are environments that are assumed to exist as explained in [setup](#setup). Only the `np` (non-production) is included in the setup as an example but depending on your goals you may need to operate with two or more xMatters instances and will need to create them as needed.
+To improve readability, `xm` is a reference to this package. `np` and `prod` in the below examples are environments that are assumed to exist as demonstrated in [getting started](#getting-started). Only the `np` (non-production) is included in the setup as an example but depending on your goals you may need to operate with two or more xMatters instances and will need to create them as needed.
 
 ### Get User with Devices
 
