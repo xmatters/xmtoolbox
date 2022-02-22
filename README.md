@@ -2,11 +2,11 @@
 
 The xmtoolbox is a easy to use, zero dependency, promise based node package to simplify the interaction with xMatters using the xMatters REST APIs. It wraps all documented APIs and adds simple backup, restore, and sync functionality.
 
-All Issues and Questions: [https://github.com/brannonvann/xmtoolbox/issues](https://github.com/brannonvann/xmtoolbox/issues)
+All Issues and Questions: [https://github.com/xmatters/xmtoolbox/issues](https://github.com/xmatters/xmtoolbox/issues)
 
-Working examples: [https://github.com/brannonvann/xmtoolbox-quick-start](https://github.com/brannonvann/xmtoolbox-quick-start)
+Working examples: [https://github.com/xmatters/xmtoolbox-quick-start](https://github.com/xmatters/xmtoolbox-quick-start)
 
-xmtoolbox documentation: [https://brannonvann.github.io/xmtoolbox/](https://brannonvann.github.io/xmtoolbox/)
+xmtoolbox documentation: [https://xmatters.github.io/xmtoolbox/](https://xmatters.github.io/xmtoolbox/)
 
 xmtoolbox node package: [https://www.npmjs.com/package/xmtoolbox](https://www.npmjs.com/package/xmtoolbox)
 
@@ -18,7 +18,7 @@ If you are new to node.js see the [Getting Started](#getting-started) section.
 
 ## Getting Started
 
-The following instructions get you started without an existing node.js project and will get all groups from xMatters. See the examples in [xmtoolbox-quick-start](https://github.com/brannonvann/xmtoolbox-quick-start) for more examples.
+The following instructions get you started without an existing node.js project and will get all groups from xMatters. See the examples in [xmtoolbox-quick-start](https://github.com/xmatters/xmtoolbox-quick-start) for more examples.
 
 1.  Install Node from <https://nodejs.org>. Install the latest Long Term Support(LTS) release.
 1.  In terminal/command prompt, create new node project using the command `npm init` and follow prompts. The defaults are sufficient for getting started.
@@ -72,7 +72,7 @@ This package has the ability to modify data within xMatters for good and bad. Pl
 
 ## Examples
 
-Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/brannonvann/xmtoolbox-quick-start).
+Full working examples are available in the [xmtoolbox-quick-start template](https://github.com/xmatters/xmtoolbox-quick-start).
 
 To improve readability, `xm` is a reference to this package. `np` and `prod` in the below examples are environments that are assumed to exist as demonstrated in [getting started](#getting-started). Only the `np` (non-production) is included in the setup as an example but depending on your goals you may need to operate with two or more xMatters instances and will need to create them as needed.
 
