@@ -26,6 +26,7 @@ exports.importJobs = require('./lib/importJobs');
 exports.integrations = require('./lib/integrations');
 exports.oauth = require('./lib/oauth');
 exports.onCall = require('./lib/onCall');
+exports.onCallSummary = require('./lib/onCallSummary');
 exports.people = require('./lib/people');
 exports.planConstants = require('./lib/planConstants');
 exports.planEndpoints = require('./lib/planEndpoints');
