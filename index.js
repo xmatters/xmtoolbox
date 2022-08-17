@@ -34,6 +34,7 @@ exports.planProperties = require('./lib/planProperties');
 exports.plans = require('./lib/plans');
 exports.roles = require('./lib/roles');
 exports.scenarios = require('./lib/scenarios');
+exports.services = require('./lib/services');
 exports.sharedLibraries = require('./lib/sharedLibraries');
 exports.shifts = require('./lib/shifts');
 exports.sites = require('./lib/sites');
