@@ -1,6 +1,6 @@
 {
   "name": "xmtoolbox",
-  "version": "1.2.25",
+  "version": "1.2.26",
   "description": "A Node JS package for interacting with xMatters. Contains functions to interact with xMatters APIs or perform a synchronization, create events, libraries to convert data, and much much more!",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "Brannon Vann",
   "license": "MIT",
   "bin": {
-    "create-xmpw": "./create-xmpw.js"
+    "create-xmpw": "create-xmpw.js"
   },
   "prettier": {
     "trailingComma": "es5",
