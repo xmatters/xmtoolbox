@@ -16,7 +16,7 @@
   "author": "Brannon Vann",
   "license": "MIT",
   "bin": {
-    "create-xmpw": "./create-xmpw.js"
+    "create-xmpw": "create-xmpw.js"
   },
   "prettier": {
     "trailingComma": "es5",
